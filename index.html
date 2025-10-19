@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- PWA & Mobile Optimization -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1173d4" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    
+    <title>StockPilot - Pharmacy POS Terminal</title>
+    <meta name="description" content="Modern pharmacy point-of-sale system for efficient transaction processing" />
+  </head>
+  
+  <body>
+    <div class="bg-background-light dark:bg-background-dark min-h-screen text-stone-800 dark:text-stone-200 transition-colors">
+      
+      <!-- Header/Navigation Bar -->
+      <header class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 px-4 sm:px-8 py-3 bg-white dark:bg-stone-900 sticky top-0 z-20 shadow-md">
+        <div class="flex items-center gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+            </svg>
+            <h2 class="text-xl font-extrabold text-primary">StockPilot POS</h2>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <p class="text-sm font-medium hidden sm:block">
+            Cashier ID: 
+            <span id="userIdDisplay" class="font-mono text-xs p-1 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+              Loading...
+            </span>
+          </p>
+          
+          <!-- Dark Mode Toggle Button -->
+          <button id="darkModeToggle" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle dark mode">
+            <svg id="moonIcon" class="h-6 w-6 text-stone-500 transition-opacity" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+              <path d="M216.7,152.6a8,8,0,0,1,11.5,8.8A104,104,0,0,1,64,64a8,8,0,0,1,8.8-11.5,112.16,112.16,0,0,0-5.74,1.86,104.28,104.28,0,0,0,149.62,149.62A112.16,112.16,0,0,0,216.7,152.6Z"></path>
+            </svg>
+            <svg id="sunIcon" class="h-6 w-6 text-yellow-500 transition-opacity hidden" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+              <path d="M128,16a8,8,0,0,0-8,8V56a8,8,0,0,0,16,0V24A8,8,0,0,0,128,16Zm96,96H200a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16ZM56,120H24a8,8,0,0,0,0,16H56a8,8,0,0,0,0-16Zm10.24-60.24a8,8,0,0,0,0,11.31L83.31,83.31a8,8,0,0,0,11.32-11.32L77.56,58.69A8,8,0,0,0,66.24,59.76ZM172.69,72a8,8,0,0,0,11.32,0l17.07-17.07a8,8,0,0,0-11.32-11.32L172.69,60.68A8,8,0,0,0,172.69,72ZM197.31,183.31l17.07,17.07a8,8,0,0,0,11.32-11.32L208.62,172a8,8,0,0,0-11.31,11.31ZM83.31,172.69a8,8,0,0,0-11.32,11.32l17.07,17.07a8,8,0,0,0,11.32-11.32ZM128,192a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V200A8,8,0,0,0,128,192ZM128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main POS Container -->
+      <main class="pos-container">
+
+        <!-- POS Catalog (Left Side - 2/3rds on Desktop) -->
+        <section class="p-4 sm:p-6 lg:p-8 bg-catalog-bg dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex flex-col h-full">
+          <h1 class="text-3xl font-bold mb-4">Pharmacy Catalog</h1>
+
+          <!-- Search and Filter -->
+          <div class="mb-6 sticky top-0 z-10 bg-catalog-bg dark:bg-stone-900 py-2">
+            <div class="relative">
+              <!-- Search Icon -->
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" fill="currentColor" height="18" viewBox="0 0 256 256" width="18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+              </svg>
+              <input 
+                id="productSearch" 
+                type="text" 
+                class="w-full h-12 rounded-xl bg-stone-100 dark:bg-stone-800/50 pl-10 pr-4 text-base focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 border border-transparent dark:border-stone-700/50" 
+                placeholder="Search products by name or SKU..."
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <!-- Product Grid (Scrollable) -->
+          <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-4 flex-grow">
+            <!-- Products will be rendered here by TypeScript -->
+          </div>
+        </section>
+
+        <!-- POS Cart (Right Side - 1/3rd on Desktop) -->
+        <section class="p-4 sm:p-6 lg:p-8 bg-cart-bg dark:bg-stone-800 flex flex-col shadow-inner">
+          <h2 class="text-3xl font-bold text-primary mb-4">Transaction Cart</h2>
+
+          <!-- Cart Items List (Scrollable) -->
+          <div id="cartItemsList" class="cart-scroll flex-grow overflow-y-auto mb-6 space-y-3 p-2 -m-2">
+            <p id="emptyCartMessage" class="text-stone-500 dark:text-stone-400 italic text-center pt-8">
+              Click on products to start a new sale or quote.
+            </p>
+            <!-- Cart items rendered here by TypeScript -->
+          </div>
+
+          <!-- Transaction Summary & Actions -->
+          <div class="border-t border-stone-300 dark:border-stone-700 pt-4 space-y-3">
+            <!-- Totals -->
+            <div class="flex justify-between text-base font-medium">
+              <span>Subtotal:</span>
+              <span id="subtotalDisplay" class="font-semibold">ZMW 0.00</span>
+            </div>
+            <div class="flex justify-between text-base font-medium">
+              <span>Tax (16% VAT):</span>
+              <span id="taxDisplay" class="font-semibold">ZMW 0.00</span>
+            </div>
+            <div class="flex justify-between text-2xl font-extrabold border-t border-stone-300 dark:border-stone-700 pt-3 mt-3">
+              <span class="text-primary">TOTAL:</span>
+              <span id="totalDisplay" class="text-primary">ZMW 0.00</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 space-y-3">
+              <button 
+                id="chargeButton" 
+                class="w-full h-14 bg-primary text-white font-bold text-lg rounded-xl shadow-lg hover:bg-primary/90 transition duration-150 flex items-center justify-center disabled:opacity-50" 
+                disabled
+                aria-label="Complete transaction"
+              >
+                CHARGE <span id="chargeAmount" class="ml-2">ZMW 0.00</span>
+              </button>
+              
+              <button 
+                id="quoteButton" 
+                class="w-full h-12 bg-indigo-500 text-white font-medium rounded-xl hover:bg-indigo-600 transition duration-150 disabled:opacity-50" 
+                disabled
+                aria-label="Save as quotation"
+              >
+                Save as Quotation
+              </button>
+              
+              <button 
+                id="clearButton" 
+                class="w-full h-12 bg-red-100 text-red-700 font-medium rounded-xl hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900 transition duration-150"
+                aria-label="Clear transaction"
+              >
+                Clear Transaction
+              </button>
+            </div>
+
+            <!-- Message Display -->
+            <div id="statusMessage" class="hidden p-3 rounded-lg text-center font-medium transition-opacity duration-300 mt-4"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
+

@@ -1,0 +1,48 @@
+{
+  "name": "stockpilot-pos",
+  "version": "1.0.0",
+  "description": "Modern Pharmacy POS Terminal with Supabase backend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,html}\"",
+    "deploy": "npm run build && firebase deploy"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.1",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.31.0",
+    "firebase-tools": "^14.10.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.0.9",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.5.2",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.13.1"
+  }
+}
+
+
