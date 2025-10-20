@@ -365,22 +365,22 @@ class POSApp {
     this.filteredProducts.forEach((product, index) => {
       const card = document.createElement('button')
       card.className =
-        'product-card group p-4 bg-white dark:bg-stone-800/80 rounded-2xl shadow-lg hover:shadow-premium border-2 border-transparent bg-gradient-to-br from-white to-purple-light/5 dark:from-stone-800 dark:to-primary/10 hover:border-gold/50 transition-all duration-300 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center hover:-translate-y-1 hover:scale-[1.02] active:scale-95'
+        'product-card group p-4 bg-gradient-to-br from-primary/60 via-purple-dark/80 to-primary/60 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-glow-gold border-2 border-gold/30 hover:border-gold/60 transition-all duration-300 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center hover:-translate-y-1 hover:scale-[1.02] active:scale-95'
       
       // Add stagger animation delay
       card.style.animationDelay = `${index * 0.05}s`
 
       card.innerHTML = `
-        <div class="w-20 h-20 sm:w-full sm:h-24 flex-shrink-0 rounded-xl bg-gradient-to-br from-purple-light/10 to-gold/10 dark:from-primary/20 dark:to-gold/20 flex items-center justify-center overflow-hidden ring-2 ring-gold/20 group-hover:ring-gold/50 transition-all duration-300">
+        <div class="w-20 h-20 sm:w-full sm:h-24 flex-shrink-0 rounded-xl bg-gradient-to-br from-purple-dark/50 to-primary/50 flex items-center justify-center overflow-hidden ring-2 ring-gold/40 group-hover:ring-gold/70 transition-all duration-300">
           <img src="${product.image || 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'}" 
                alt="${product.name}" 
                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                onerror="this.src='https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'" />
         </div>
         <div class="flex-1 sm:w-full sm:mt-3">
-          <p class="text-base sm:text-sm font-semibold text-stone-900 dark:text-stone-100 line-clamp-2 sm:truncate group-hover:text-primary dark:group-hover:text-gold transition-colors duration-300">${product.name}</p>
-          <div class="inline-block mt-1 px-3 py-1 rounded-full bg-gradient-to-r from-primary/10 to-gold/10 dark:from-primary/20 dark:to-gold/20 border border-gold/30">
-            <p class="text-sm sm:text-xs font-bold bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">${POSService.formatCurrency(product.price)}</p>
+          <p class="text-base sm:text-sm font-semibold text-white line-clamp-2 sm:truncate group-hover:text-gold transition-colors duration-300">${product.name}</p>
+          <div class="inline-block mt-1 px-3 py-1 rounded-full bg-gradient-to-r from-gold/20 to-gold/30 border border-gold/40">
+            <p class="text-sm sm:text-xs font-bold text-gold">${POSService.formatCurrency(product.price)}</p>
           </div>
         </div>
       `
@@ -407,20 +407,20 @@ class POSApp {
         const lineTotal = item.price * item.quantity
         const itemElement = document.createElement('div')
         itemElement.className =
-          'cart-item-fade-in flex justify-between items-center bg-gradient-to-r from-white to-gold/5 dark:from-stone-900 dark:to-primary/10 p-3 rounded-xl shadow-md border-2 border-gold/20 hover:border-gold/40 transition-all duration-300'
+          'cart-item-fade-in flex justify-between items-center bg-gradient-to-r from-primary/50 to-purple-dark/50 backdrop-blur-sm p-3 rounded-xl shadow-md border-2 border-gold/30 hover:border-gold/50 transition-all duration-300'
 
         itemElement.innerHTML = `
           <div class="flex flex-col flex-grow">
-            <span class="font-semibold text-sm text-primary dark:text-gold">${item.name}</span>
-            <span class="text-xs text-stone-600 dark:text-stone-400">${POSService.formatCurrency(item.price)} x ${item.quantity}</span>
+            <span class="font-semibold text-sm text-gold">${item.name}</span>
+            <span class="text-xs text-white/70">${POSService.formatCurrency(item.price)} x ${item.quantity}</span>
           </div>
           <div class="flex items-center gap-3">
-            <div class="flex items-center space-x-1 bg-white dark:bg-stone-800 rounded-full px-1 py-0.5 border border-gold/30">
+            <div class="flex items-center space-x-1 bg-purple-dark/60 rounded-full px-1 py-0.5 border border-gold/30">
               <button class="qty-btn w-7 h-7 bg-gradient-to-br from-primary to-accent text-white rounded-full text-sm font-bold hover:shadow-glow-purple active:scale-90 transition-all duration-200" data-id="${item.id}" data-change="-1">-</button>
-              <span class="font-bold text-sm w-6 text-center text-primary dark:text-gold">${item.quantity}</span>
+              <span class="font-bold text-sm w-6 text-center text-gold">${item.quantity}</span>
               <button class="qty-btn w-7 h-7 bg-gradient-to-br from-primary to-gold text-white rounded-full text-sm font-bold hover:shadow-glow-gold active:scale-90 transition-all duration-200" data-id="${item.id}" data-change="1">+</button>
             </div>
-            <span class="font-bold text-base bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent w-20 text-right">${POSService.formatCurrency(lineTotal)}</span>
+            <span class="font-bold text-base text-gold w-20 text-right">${POSService.formatCurrency(lineTotal)}</span>
           </div>
         `
 

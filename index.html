@@ -26,7 +26,7 @@
   </head>
   
   <body>
-    <div class="bg-background-light dark:bg-background-dark min-h-screen text-stone-800 dark:text-stone-200 transition-colors">
+    <div class="bg-gradient-to-br from-purple-dark via-primary to-purple-dark min-h-screen text-white transition-colors">
       
       <!-- Header/Navigation Bar -->
       <header class="flex items-center justify-between border-b border-gold/20 px-3 sm:px-6 lg:px-8 py-3 bg-gradient-to-r from-primary via-accent to-primary dark:from-purple-dark dark:via-primary dark:to-purple-dark sticky top-0 z-20 shadow-premium backdrop-blur-sm">
@@ -85,20 +85,20 @@
       <main class="pos-container">
 
         <!-- POS Catalog (Left Side - 2/3rds on Desktop) -->
-        <section class="p-4 sm:p-6 lg:p-8 bg-gradient-radial from-white via-white to-purple-light/5 dark:from-background-dark dark:via-background-dark dark:to-primary/10 border-r border-gold/20 flex flex-col h-full">
-          <h1 class="text-2xl sm:text-3xl font-display font-bold mb-4 text-primary dark:text-gold">Pharmacy Catalog</h1>
+        <section class="p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-primary/40 via-purple-dark/60 to-primary/40 backdrop-blur-sm border-r border-gold/30 flex flex-col h-full">
+          <h1 class="text-2xl sm:text-3xl font-display font-bold mb-4 text-gold">Pharmacy Catalog</h1>
 
           <!-- Search and Filter -->
-          <div class="mb-6 sticky top-0 z-10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md py-2 rounded-xl">
+          <div class="mb-6 sticky top-0 z-10 bg-purple-dark/90 backdrop-blur-md py-2 rounded-xl border border-gold/20">
             <div class="relative group">
               <!-- Search Icon -->
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 group-focus-within:text-gold transition-colors duration-300" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gold/70 group-focus-within:text-gold transition-colors duration-300" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
               </svg>
               <input 
                 id="productSearch" 
                 type="text" 
-                class="w-full h-12 rounded-xl bg-gradient-to-r from-stone-50 to-gold/5 dark:from-stone-800/50 dark:to-primary/20 pl-11 pr-4 text-base focus:outline-none focus:ring-2 focus:ring-gold focus:border-primary border-2 border-transparent hover:border-primary/20 transition-all duration-300" 
+                class="w-full h-12 rounded-xl bg-primary/30 backdrop-blur-sm pl-11 pr-4 text-base text-white placeholder-gold/60 focus:outline-none focus:ring-2 focus:ring-gold focus:bg-primary/40 border-2 border-gold/30 hover:border-gold/50 transition-all duration-300" 
                 placeholder="Search products by name or SKU..."
                 autocomplete="off"
               />
@@ -112,31 +112,31 @@
         </section>
 
         <!-- POS Cart (Right Side - 1/3rd on Desktop) -->
-        <section class="p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-cart-bg via-gold/5 to-cart-bg dark:from-stone-900 dark:via-primary/10 dark:to-stone-900 flex flex-col shadow-inner">
-          <h2 class="text-2xl sm:text-3xl font-display font-bold bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent mb-4">Transaction Cart</h2>
+        <section class="p-4 sm:p-6 lg:p-8 bg-gradient-to-bl from-primary/50 via-purple-dark/70 to-primary/50 backdrop-blur-sm flex flex-col shadow-inner border-l border-gold/30">
+          <h2 class="text-2xl sm:text-3xl font-display font-bold text-gold mb-4 drop-shadow-lg">Transaction Cart</h2>
 
           <!-- Cart Items List (Scrollable) -->
           <div id="cartItemsList" class="cart-scroll flex-grow overflow-y-auto mb-6 space-y-3 p-2 -m-2">
-            <p id="emptyCartMessage" class="text-stone-500 dark:text-stone-400 italic text-center pt-8">
+            <p id="emptyCartMessage" class="text-gold/70 italic text-center pt-8 text-sm">
               Click on products to start a new sale or quote.
             </p>
             <!-- Cart items rendered here by TypeScript -->
           </div>
 
           <!-- Transaction Summary & Actions -->
-          <div class="border-t border-stone-300 dark:border-stone-700 pt-4 space-y-3">
+          <div class="border-t-2 border-gold/40 pt-4 space-y-3">
             <!-- Totals -->
-            <div class="flex justify-between text-base font-medium text-stone-700 dark:text-stone-300">
+            <div class="flex justify-between text-base font-medium text-white/90">
               <span>Subtotal:</span>
-              <span id="subtotalDisplay" class="font-semibold text-primary dark:text-gold">ZMW 0.00</span>
+              <span id="subtotalDisplay" class="font-semibold text-gold">ZMW 0.00</span>
             </div>
-            <div class="flex justify-between text-base font-medium text-stone-700 dark:text-stone-300">
+            <div class="flex justify-between text-base font-medium text-white/90">
               <span>Tax (16% VAT):</span>
-              <span id="taxDisplay" class="font-semibold text-primary dark:text-gold">ZMW 0.00</span>
+              <span id="taxDisplay" class="font-semibold text-gold">ZMW 0.00</span>
             </div>
-            <div class="flex justify-between text-2xl font-extrabold border-t-2 border-gold/30 pt-3 mt-3">
-              <span class="font-display bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">TOTAL:</span>
-              <span id="totalDisplay" class="font-display bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">ZMW 0.00</span>
+            <div class="flex justify-between text-2xl font-extrabold border-t-2 border-gold/40 pt-3 mt-3">
+              <span class="font-display text-gold drop-shadow-lg">TOTAL:</span>
+              <span id="totalDisplay" class="font-display text-gold drop-shadow-lg">ZMW 0.00</span>
             </div>
 
             <!-- Action Buttons -->
