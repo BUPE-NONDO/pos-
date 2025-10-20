@@ -28,6 +28,18 @@
   <body>
     <div class="bg-gradient-to-br from-purple-dark via-primary to-purple-dark min-h-screen text-white transition-colors">
       
+      <!-- Hero Section with Background Image -->
+      <div class="relative h-32 sm:h-40 overflow-hidden border-b-2 border-gold/30">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/95 via-purple-dark/90 to-primary/95"></div>
+        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=300&fit=crop" alt="Healthcare Professional" class="absolute inset-0 w-full h-full object-cover opacity-30" />
+        <div class="relative z-10 h-full flex items-center justify-center text-center px-4">
+          <div>
+            <h1 class="text-2xl sm:text-4xl font-display font-bold text-gold drop-shadow-lg mb-2">StockPilot Pharmacy POS</h1>
+            <p class="text-sm sm:text-base text-white/90 italic">Professional Healthcare Solutions</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Header/Navigation Bar -->
       <header class="flex items-center justify-between border-b border-gold/20 px-3 sm:px-6 lg:px-8 py-3 bg-gradient-to-r from-primary via-accent to-primary dark:from-purple-dark dark:via-primary dark:to-purple-dark sticky top-0 z-20 shadow-premium backdrop-blur-sm">
         <div class="flex items-center gap-2 sm:gap-4">
@@ -174,6 +186,60 @@
         </section>
       </main>
       
+      <!-- About Section Modal (Hidden by default) -->
+      <div id="aboutModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-gradient-to-br from-primary via-purple-dark to-primary max-w-2xl w-full rounded-2xl shadow-premium border-2 border-gold/40 overflow-hidden transform transition-all duration-300">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=400&fit=crop" alt="Healthcare Team" class="w-full h-full object-cover opacity-40" />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent"></div>
+            <div class="absolute bottom-4 left-6">
+              <h2 class="text-3xl font-display font-bold text-gold">About StockPilot POS</h2>
+              <p class="text-white/90 text-sm mt-1">Professional Pharmacy Management</p>
+            </div>
+            <button id="closeAboutBtn" class="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="flex items-start gap-4">
+              <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200&h=200&fit=crop" alt="Healthcare" class="w-20 h-20 rounded-xl object-cover border-2 border-gold/30" />
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-gold mb-2">Modern Healthcare Solutions</h3>
+                <p class="text-white/80 text-sm leading-relaxed">
+                  StockPilot POS is a comprehensive pharmacy management system designed for modern healthcare providers. 
+                  Our intuitive interface helps streamline operations, manage inventory, and provide excellent patient care.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-gold/20">
+                <p class="text-gold font-semibold mb-1">Real-time Processing</p>
+                <p class="text-white/70 text-xs">Instant transaction handling</p>
+              </div>
+              <div class="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-gold/20">
+                <p class="text-gold font-semibold mb-1">Inventory Control</p>
+                <p class="text-white/70 text-xs">Smart stock management</p>
+              </div>
+            </div>
+            <div class="pt-3 border-t border-gold/20 flex items-center justify-between">
+              <p class="text-white/60 text-xs">Need help? Contact support</p>
+              <button id="closeAboutBtn2" class="px-4 py-2 bg-gold text-primary font-semibold rounded-lg hover:bg-gold-dark transition-colors text-sm">
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Button (Fixed) -->
+      <button id="helpButton" class="fixed bottom-4 left-4 z-10 w-12 h-12 bg-gradient-to-br from-gold to-gold-dark text-primary rounded-full shadow-premium hover:shadow-glow-gold transition-all duration-300 flex items-center justify-center group">
+        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 256 256">
+          <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,168a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm8-48.72V144a8,8,0,0,1-16,0v-8a8,8,0,0,1,8-8,20,20,0,1,0-20-20,8,8,0,0,1-16,0,36,36,0,1,1,44,35.28Z"></path>
+        </svg>
+      </button>
+
       <!-- Powered by Gifted Solutions Footer -->
       <footer class="fixed bottom-4 right-4 z-10 pointer-events-none">
         <div class="bg-gradient-to-r from-primary/95 to-accent/95 backdrop-blur-md rounded-2xl shadow-premium border border-gold/30 px-4 py-2 flex items-center gap-2 pointer-events-auto group hover:shadow-glow-gold transition-all duration-300">
@@ -191,6 +257,32 @@
     </div>
 
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      // About Modal functionality
+      const aboutModal = document.getElementById('aboutModal');
+      const helpButton = document.getElementById('helpButton');
+      const closeAboutBtn = document.getElementById('closeAboutBtn');
+      const closeAboutBtn2 = document.getElementById('closeAboutBtn2');
+      
+      helpButton?.addEventListener('click', () => {
+        aboutModal?.classList.remove('hidden');
+      });
+      
+      closeAboutBtn?.addEventListener('click', () => {
+        aboutModal?.classList.add('hidden');
+      });
+      
+      closeAboutBtn2?.addEventListener('click', () => {
+        aboutModal?.classList.add('hidden');
+      });
+      
+      // Close on outside click
+      aboutModal?.addEventListener('click', (e) => {
+        if (e.target === aboutModal) {
+          aboutModal.classList.add('hidden');
+        }
+      });
+    </script>
   </body>
 </html>
 
