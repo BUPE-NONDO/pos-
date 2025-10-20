@@ -30,10 +30,10 @@ export class POSService {
   }
 
   /**
-   * Generate a random cashier ID (for demo - in production this would come from auth)
+   * Generate cashier ID
    */
   static generateCashierId(): string {
-    return 'CASHIER_' + Math.random().toString(36).substring(2, 8).toUpperCase()
+    return 'ANTHONY MUSONDA'
   }
 
   /**

@@ -46,9 +46,28 @@ export class PrintService {
           .totals { border-top: 1px solid #000; margin-top: 1em; padding-top: 0.5em; }
           .final-total { font-size: 1.2em; font-weight: bold; border-top: 2px solid #000; padding-top: 0.5em; }
           .footer { text-align: center; margin-top: 2em; font-size: 0.9em; }
+          .receipt-actions { position: fixed; top: 10px; right: 10px; z-index: 1000; display: flex; gap: 8px; }
+          @media print {
+            button { display: none !important; }
+            .receipt-actions { display: none !important; }
+          }
+          @media screen and (max-width: 768px) {
+            .receipt-actions {
+              position: static !important;
+              justify-content: center;
+              margin-bottom: 1em;
+              padding: 10px;
+              background: #f9fafb;
+              border-radius: 8px;
+            }
+          }
         </style>
       </head>
       <body>
+        <div class="receipt-actions">
+          <button onclick="window.print()" style="padding: 8px 16px; background: #1173d4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: 600;">🖨️ Print</button>
+          <button onclick="if(navigator.share){navigator.share({title:'StockPilot Receipt',text:'Transaction receipt'}).catch(e=>console.log(e))}" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-weight: 600;">📤 Share</button>
+        </div>
         <div class="header center">
           <h2 class="bold">StockPilot Pharmacy</h2>
           <p>Lusaka, Zambia<br>TIN: 100-000-000</p>
@@ -95,7 +114,7 @@ export class PrintService {
       </html>
     `
 
-    this.openPrintWindow(receiptHTML, `Receipt-${transaction.transId}`)
+    this.openPrintWindow(receiptHTML)
   }
 
   /**
@@ -198,9 +217,53 @@ export class PrintService {
             border-top: 1px dashed #ccc;
             padding-top: 1em;
           }
+          @media print {
+            button { display: none !important; }
+            .mobile-actions { display: none !important; }
+          }
+          @media screen and (max-width: 768px) {
+            body {
+              margin: 0.5cm;
+              padding: 10px;
+              font-size: 9pt;
+            }
+            .mobile-actions {
+              position: static !important;
+              display: flex !important;
+              justify-content: center !important;
+              flex-direction: row !important;
+              margin-bottom: 1em;
+              padding: 10px;
+              background: #f9fafb;
+              border-radius: 8px;
+            }
+            .header h1 {
+              font-size: 1.4em;
+            }
+            .details {
+              flex-direction: column;
+            }
+            .details div {
+              width: 100% !important;
+              margin-bottom: 1em;
+            }
+            table {
+              font-size: 0.85em;
+            }
+            th, td {
+              padding: 6px 4px;
+            }
+            .total-row {
+              font-size: 1em;
+            }
+          }
         </style>
       </head>
       <body>
+        <div class="mobile-actions">
+          <button onclick="window.print()" style="padding: 10px 16px; background: #1173d4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; font-weight: 600;">🖨️ Print</button>
+          <button onclick="if(navigator.share){navigator.share({title:'StockPilot Quotation',text:'View your pharmacy quotation'}).catch(e=>console.log(e))}" style="padding: 10px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); white-space: nowrap; font-weight: 600;">📤 Share</button>
+        </div>
         <div class="header">
           <h1>StockPilot Pharmacy - Quotation</h1>
           <p>Lusaka, Zambia | Email: sales@stockpilot.zm | Tel: +260 977 XXX XXX</p>
@@ -265,32 +328,109 @@ export class PrintService {
       </html>
     `
 
-    this.openPrintWindow(quotationHTML, `Quotation-${quotation.quoteId}`)
+    this.openPrintWindow(quotationHTML)
   }
 
   /**
-   * Open a new window with print dialog
-   * @param html - HTML content to print
-   * @param title - Window title
+   * Check if user is on mobile device
    */
-  private static openPrintWindow(html: string, title: string): void {
-    const printWindow = window.open('', '', 'height=600,width=800')
-    if (!printWindow) {
-      console.error('Failed to open print window. Check popup blocker.')
-      alert('Please allow popups to print receipts and quotations.')
+  private static isMobileDevice(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.innerWidth <= 768)
+  }
+
+  /**
+   * Open a new window with print dialog (optimized for mobile and desktop)
+   * @param html - HTML content to print
+   */
+  private static openPrintWindow(html: string): void {
+    const isMobile = this.isMobileDevice()
+    
+    try {
+      if (isMobile) {
+        // Mobile-optimized approach: Create a viewable page
+        this.openMobileViewPage(html)
+      } else {
+        // Desktop: Try traditional print window
+        this.openDesktopPrintWindow(html)
+      }
+    } catch (error) {
+      console.error('Print window error:', error)
+      // Fallback: Download as HTML
+      this.downloadAsHTML(html)
+    }
+  }
+
+  /**
+   * Mobile-optimized view page with share and download options
+   */
+  private static openMobileViewPage(html: string): void {
+    // Create a blob URL for the content
+    const blob = new Blob([html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    
+    // Try to open in new tab
+    const newWindow = window.open(url, '_blank')
+    
+    if (!newWindow) {
+      // Fallback: Download the file
+      this.downloadAsHTML(html)
+      alert(
+        '📱 Document ready!\n\n' +
+        'The document has been downloaded.\n' +
+        'Open it to view, share, or print.'
+      )
+    } else {
+      // Clean up blob URL after a delay
+      setTimeout(() => URL.revokeObjectURL(url), 5000)
+    }
+  }
+
+  /**
+   * Desktop print window
+   */
+  private static openDesktopPrintWindow(html: string): void {
+    const printWindow = window.open('', '_blank', 'height=800,width=800,scrollbars=yes')
+    
+    if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') {
+      // Popup blocked - download instead
+      this.downloadAsHTML(html)
+      alert(
+        '✅ Document downloaded!\n\n' +
+        'Popup blocker detected. The document has been downloaded.\n' +
+        'Open it and click the Print button.'
+      )
       return
     }
 
+    // Write content and trigger print
+    printWindow.document.open()
     printWindow.document.write(html)
     printWindow.document.close()
-
+    
     // Wait for content to load before printing
     printWindow.onload = () => {
       printWindow.focus()
-      printWindow.print()
-      // Close window after print dialog
-      setTimeout(() => printWindow.close(), 100)
+      setTimeout(() => {
+        printWindow.print()
+      }, 250)
     }
+  }
+
+  /**
+   * Download HTML as file
+   */
+  private static downloadAsHTML(html: string): void {
+    const blob = new Blob([html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `StockPilot-Document-${Date.now()}.html`
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    setTimeout(() => URL.revokeObjectURL(url), 100)
   }
 }
 

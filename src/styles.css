@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Custom styles for POS layout consistency */
 .pos-container {
@@ -17,7 +15,8 @@
 
 /* Smooth transitions */
 body {
-  @apply antialiased font-display;
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -27,15 +26,29 @@ body {
 }
 
 .cart-scroll::-webkit-scrollbar-track {
-  @apply bg-stone-200 dark:bg-stone-700 rounded;
+  background-color: rgb(231 229 228);
+  border-radius: 0.25rem;
+}
+
+.dark .cart-scroll::-webkit-scrollbar-track {
+  background-color: rgb(68 64 60);
 }
 
 .cart-scroll::-webkit-scrollbar-thumb {
-  @apply bg-stone-400 dark:bg-stone-500 rounded;
+  background-color: rgb(168 162 158);
+  border-radius: 0.25rem;
+}
+
+.dark .cart-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(120 113 108);
 }
 
 .cart-scroll::-webkit-scrollbar-thumb:hover {
-  @apply bg-stone-500 dark:bg-stone-400;
+  background-color: rgb(120 113 108);
+}
+
+.dark .cart-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(168 162 158);
 }
 
 /* Print-specific styles */
@@ -80,18 +93,41 @@ body {
 
 /* Product card hover effect */
 .product-card {
-  @apply transition-all duration-150 hover:scale-[1.02] hover:shadow-xl;
+  transition: all 0.15s;
+}
+
+.product-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 /* Button loading state */
 .btn-loading {
-  @apply opacity-50 cursor-not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
   pointer-events: none;
 }
 
 .btn-loading::after {
   content: '';
-  @apply inline-block ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin;
+  display: inline-block;
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+  border-color: white;
+  border-top-color: transparent;
+  border-radius: 9999px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 

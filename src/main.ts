@@ -32,9 +32,13 @@ class POSApp {
     statusMessage: document.getElementById('statusMessage') as HTMLDivElement,
     userIdDisplay: document.getElementById('userIdDisplay') as HTMLSpanElement,
     darkModeToggle: document.getElementById('darkModeToggle') as HTMLButtonElement,
-    moonIcon: document.getElementById('moonIcon') as SVGElement,
-    sunIcon: document.getElementById('sunIcon') as SVGElement,
+    moonIcon: document.getElementById('moonIcon') as HTMLElement | null,
+    sunIcon: document.getElementById('sunIcon') as HTMLElement | null,
+    installButton: document.getElementById('installButton') as HTMLButtonElement | null,
   }
+
+  // PWA Install prompt
+  private deferredPrompt: any = null
 
   constructor() {
     this.initialize()
@@ -53,6 +57,9 @@ class POSApp {
 
     // Set up dark mode
     this.setupDarkMode()
+
+    // Set up PWA install
+    this.setupPWAInstall()
 
     // Check Supabase connection
     this.checkBackendConnection()
@@ -163,8 +170,8 @@ class POSApp {
 
     if (isDark) {
       html.classList.add('dark')
-      this.dom.sunIcon.classList.remove('hidden')
-      this.dom.moonIcon.classList.add('hidden')
+      this.dom.sunIcon?.classList.remove('hidden')
+      this.dom.moonIcon?.classList.add('hidden')
     }
   }
 
@@ -174,11 +181,11 @@ class POSApp {
     localStorage.setItem('darkMode', isDark.toString())
 
     if (isDark) {
-      this.dom.sunIcon.classList.remove('hidden')
-      this.dom.moonIcon.classList.add('hidden')
+      this.dom.sunIcon?.classList.remove('hidden')
+      this.dom.moonIcon?.classList.add('hidden')
     } else {
-      this.dom.sunIcon.classList.add('hidden')
-      this.dom.moonIcon.classList.remove('hidden')
+      this.dom.sunIcon?.classList.add('hidden')
+      this.dom.moonIcon?.classList.remove('hidden')
     }
   }
 
@@ -444,6 +451,110 @@ class POSApp {
     setTimeout(() => {
       this.dom.statusMessage.classList.add('hidden')
     }, 5000)
+  }
+
+  /**
+   * Set up PWA install functionality
+   */
+  private setupPWAInstall(): void {
+    // Listen for beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the default mini-infobar from appearing
+      e.preventDefault()
+      
+      // Store the event for later use
+      this.deferredPrompt = e
+      
+      // Show the install button
+      if (this.dom.installButton) {
+        this.dom.installButton.classList.remove('hidden')
+        console.log('✅ PWA install prompt captured')
+      }
+    })
+
+    // Handle install button click
+    if (this.dom.installButton) {
+      this.dom.installButton.addEventListener('click', async () => {
+        if (!this.deferredPrompt) {
+          console.log('⚠️ No install prompt available')
+          this.showInstallInstructions()
+          return
+        }
+
+        // Show the install prompt
+        this.deferredPrompt.prompt()
+        
+        // Wait for user's response
+        const { outcome } = await this.deferredPrompt.userChoice
+        
+        if (outcome === 'accepted') {
+          console.log('✅ User accepted install')
+          this.showMessage('App installing...', 'success')
+        } else {
+          console.log('❌ User dismissed install')
+        }
+        
+        // Clear the prompt
+        this.deferredPrompt = null
+        
+        // Hide the button
+        if (this.dom.installButton) {
+          this.dom.installButton.classList.add('hidden')
+        }
+      })
+    }
+
+    // Listen for app installed event
+    window.addEventListener('appinstalled', () => {
+      console.log('✅ PWA installed successfully')
+      this.showMessage('App installed successfully! 🎉', 'success')
+      this.deferredPrompt = null
+      
+      if (this.dom.installButton) {
+        this.dom.installButton.classList.add('hidden')
+      }
+    })
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('✅ App is running in standalone mode')
+      if (this.dom.installButton) {
+        this.dom.installButton.classList.add('hidden')
+      }
+    }
+  }
+
+  /**
+   * Show install instructions for iOS and other browsers
+   */
+  private showInstallInstructions(): void {
+    const userAgent = navigator.userAgent.toLowerCase()
+    let instructions = ''
+
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      // iOS devices
+      instructions = 
+        '📱 To install on iOS:\n\n' +
+        '1. Tap the Share button (⬆️)\n' +
+        '2. Scroll down and tap "Add to Home Screen"\n' +
+        '3. Tap "Add" to confirm'
+    } else if (/android/.test(userAgent)) {
+      // Android devices
+      instructions = 
+        '📱 To install on Android:\n\n' +
+        '1. Tap the menu (⋮) in your browser\n' +
+        '2. Tap "Add to Home screen" or "Install app"\n' +
+        '3. Follow the prompts'
+    } else {
+      // Desktop browsers
+      instructions = 
+        '💻 To install on your computer:\n\n' +
+        '1. Look for the install icon in your browser\'s address bar\n' +
+        '2. Click it and follow the prompts\n\n' +
+        'Or use your browser menu: Settings → Install StockPilot'
+    }
+
+    alert(instructions)
   }
 }
 

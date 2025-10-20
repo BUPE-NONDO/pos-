@@ -17,10 +17,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
+    "firebase": "^12.4.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",
+    "@tailwindcss/postcss": "^4.1.14",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.14",
@@ -34,6 +36,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.49",
     "prettier": "^3.6.2",
+    "supabase": "^2.51.0",
     "tailwindcss": "^4.0.9",
     "ts-jest": "^29.2.5",
     "typescript": "^5.5.2",
@@ -44,5 +47,3 @@
     "pnpm": ">=10.13.1"
   }
 }
-
-

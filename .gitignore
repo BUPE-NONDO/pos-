@@ -43,4 +43,9 @@ firebase-debug.log
 *.temp
 .cache/
 
+# Supabase
+supabase-cli
+supabase/.branches/
+supabase/.temp/
+
 
