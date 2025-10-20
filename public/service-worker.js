@@ -1,10 +1,10 @@
 /**
  * Service Worker for StockPilot POS
  * Provides offline functionality and caching for the PWA
- * Version: 2.0 - Updated: 2025-10-20 14:30
+ * Version: 3.0 - Gifted Solutions Redesign - Updated: 2025-10-20 15:00
  */
 
-const CACHE_VERSION = '2.0-20251020'
+const CACHE_VERSION = '3.0-gifted-20251020'
 const CACHE_NAME = `stockpilot-pos-v${CACHE_VERSION}`
 const RUNTIME_CACHE = `stockpilot-runtime-v${CACHE_VERSION}`
 
