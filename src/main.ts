@@ -6,15 +6,16 @@ import { getSupabaseStatus, isSupabaseConfigured } from '@/lib/supabase'
 import './styles.css'
 
 /**
- * Main POS Application
- * Manages state, UI updates, and user interactions
+ * StockPilot POS Application - Powered by Gifted Solutions
+ * Modern pharmacy point-of-sale system with dark purple theme
+ * @version 4.0.0
  */
 class POSApp {
   private cart: CartItem[] = []
   private products: Product[] = []
   private filteredProducts: Product[] = []
   private cashierId: string = ''
-  private readonly TAX_RATE = 0.16 // 16% VAT for Zambia
+  private readonly TAX_RATE = 0.16
 
   // DOM element references
   private dom = {
@@ -37,7 +38,6 @@ class POSApp {
     installButton: document.getElementById('installButton') as HTMLButtonElement | null,
   }
 
-  // PWA Install prompt
   private deferredPrompt: any = null
 
   constructor() {
@@ -45,30 +45,17 @@ class POSApp {
   }
 
   private async initialize(): Promise<void> {
-    // Generate cashier ID
     this.cashierId = POSService.generateCashierId()
     this.dom.userIdDisplay.textContent = this.cashierId
-
-    // Load product catalog
     this.loadProducts()
-
-    // Set up event listeners
     this.setupEventListeners()
-
-    // Set up dark mode
     this.setupDarkMode()
-
-    // Set up PWA install
     this.setupPWAInstall()
-
-    // Check Supabase connection
     this.checkBackendConnection()
-
-    console.log('✅ StockPilot POS initialized successfully')
+    console.log('✅ StockPilot POS v4.0 - Gifted Solutions Edition')
   }
 
   private loadProducts(): void {
-    // In production, this would fetch from a database/API
     this.products = [
       {
         id: 1,
@@ -147,18 +134,14 @@ class POSApp {
   }
 
   private setupEventListeners(): void {
-    // Search functionality
     this.dom.productSearch.addEventListener('input', e => {
       const target = e.target as HTMLInputElement
       this.handleSearch(target.value)
     })
 
-    // Cart action buttons
     this.dom.chargeButton.addEventListener('click', () => this.handleCharge())
     this.dom.quoteButton.addEventListener('click', () => this.handleQuote())
     this.dom.clearButton.addEventListener('click', () => this.handleClear())
-
-    // Dark mode toggle
     this.dom.darkModeToggle.addEventListener('click', () => this.toggleDarkMode())
   }
 
@@ -193,10 +176,7 @@ class POSApp {
   private checkBackendConnection(): void {
     const status = getSupabaseStatus()
     if (!isSupabaseConfigured()) {
-      console.warn('⚠️ Running in offline mode:', status)
-      console.warn(
-        '💡 Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env to enable cloud sync'
-      )
+      console.warn('⚠️ Offline mode - Set Supabase credentials in .env for cloud sync')
     } else {
       console.log('✅ Backend connected:', status)
     }
@@ -232,7 +212,6 @@ class POSApp {
       return
     }
 
-    // Disable buttons during processing
     this.setButtonsEnabled(false)
 
     const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
@@ -253,19 +232,9 @@ class POSApp {
         status: 'Completed' as const,
       }
 
-      // Save to database
       await DatabaseService.saveTransaction(transaction)
-
-      // Print receipt
       PrintService.printReceipt(transaction)
-
-      // Show success message
-      this.showMessage(
-        `Transaction Complete! Total: ${POSService.formatCurrency(totals.total)}`,
-        'success'
-      )
-
-      // Clear cart
+      this.showMessage(`Transaction Complete! ${POSService.formatCurrency(totals.total)}`, 'success')
       this.cart = POSService.clearCart()
       this.renderCart()
     } catch (error) {
@@ -283,7 +252,6 @@ class POSApp {
       return
     }
 
-    // Disable buttons during processing
     this.setButtonsEnabled(false)
 
     const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
@@ -308,21 +276,14 @@ class POSApp {
         validUntil: validUntil.toISOString(),
       }
 
-      // Save to database
       await DatabaseService.saveQuotation(quotation)
-
-      // Print quotation
       PrintService.printQuotation(quotation)
-
-      // Show success message
-      this.showMessage(`Quotation ${quoteId} saved and printing...`, 'success')
-
-      // Clear cart
+      this.showMessage(`Quotation ${quoteId} saved!`, 'success')
       this.cart = POSService.clearCart()
       this.renderCart()
     } catch (error) {
       console.error('Quotation error:', error)
-      this.showMessage('Failed to save quotation. Please try again.', 'error')
+      this.showMessage('Failed to save quotation.', 'error')
     } finally {
       this.setButtonsEnabled(true)
     }
@@ -367,7 +328,6 @@ class POSApp {
       card.className =
         'product-card group p-4 bg-gradient-to-br from-primary/60 via-purple-dark/80 to-primary/60 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-glow-gold border-2 border-gold/30 hover:border-gold/60 transition-all duration-300 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center hover:-translate-y-1 hover:scale-[1.02] active:scale-95'
       
-      // Add stagger animation delay
       card.style.animationDelay = `${index * 0.05}s`
 
       card.innerHTML = `
@@ -424,7 +384,6 @@ class POSApp {
           </div>
         `
 
-        // Add event listeners for quantity buttons
         itemElement.querySelectorAll('.qty-btn').forEach(btn => {
           btn.addEventListener('click', e => {
             const target = e.target as HTMLButtonElement
@@ -438,7 +397,6 @@ class POSApp {
       })
     }
 
-    // Update totals
     const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
     this.dom.subtotalDisplay.textContent = POSService.formatCurrency(totals.subtotal)
     this.dom.taxDisplay.textContent = POSService.formatCurrency(totals.tax)
@@ -463,60 +421,39 @@ class POSApp {
     }, 5000)
   }
 
-  /**
-   * Set up PWA install functionality
-   */
   private setupPWAInstall(): void {
-    // Listen for beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', e => {
-      // Prevent the default mini-infobar from appearing
       e.preventDefault()
-
-      // Store the event for later use
       this.deferredPrompt = e
 
-      // Show the install button
       if (this.dom.installButton) {
         this.dom.installButton.classList.remove('hidden')
-        console.log('✅ PWA install prompt captured')
       }
     })
 
-    // Handle install button click
     if (this.dom.installButton) {
       this.dom.installButton.addEventListener('click', async () => {
         if (!this.deferredPrompt) {
-          console.log('⚠️ No install prompt available')
           this.showInstallInstructions()
           return
         }
 
-        // Show the install prompt
         this.deferredPrompt.prompt()
-
-        // Wait for user's response
         const { outcome } = await this.deferredPrompt.userChoice
 
         if (outcome === 'accepted') {
-          console.log('✅ User accepted install')
           this.showMessage('App installing...', 'success')
-        } else {
-          console.log('❌ User dismissed install')
         }
 
-        // Clear the prompt
         this.deferredPrompt = null
 
-        // Hide the button
         if (this.dom.installButton) {
           this.dom.installButton.classList.add('hidden')
         }
       })
     }
 
-    // Listen for app installed event
     window.addEventListener('appinstalled', () => {
-      console.log('✅ PWA installed successfully')
       this.showMessage('App installed successfully! 🎉', 'success')
       this.deferredPrompt = null
 
@@ -525,67 +462,42 @@ class POSApp {
       }
     })
 
-    // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('✅ App is running in standalone mode')
       if (this.dom.installButton) {
         this.dom.installButton.classList.add('hidden')
       }
     }
   }
 
-  /**
-   * Show install instructions for iOS and other browsers
-   */
   private showInstallInstructions(): void {
     const userAgent = navigator.userAgent.toLowerCase()
     let instructions = ''
 
     if (/iphone|ipad|ipod/.test(userAgent)) {
-      // iOS devices
       instructions =
-        '📱 To install on iOS:\n\n' +
-        '1. Tap the Share button (⬆️)\n' +
-        '2. Scroll down and tap "Add to Home Screen"\n' +
-        '3. Tap "Add" to confirm'
+        '📱 iOS:\n1. Tap Share (⬆️)\n2. Add to Home Screen\n3. Tap Add'
     } else if (/android/.test(userAgent)) {
-      // Android devices
       instructions =
-        '📱 To install on Android:\n\n' +
-        '1. Tap the menu (⋮) in your browser\n' +
-        '2. Tap "Add to Home screen" or "Install app"\n' +
-        '3. Follow the prompts'
+        '📱 Android:\n1. Tap menu (⋮)\n2. Add to Home screen\n3. Follow prompts'
     } else {
-      // Desktop browsers
       instructions =
-        '💻 To install on your computer:\n\n' +
-        "1. Look for the install icon in your browser's address bar\n" +
-        '2. Click it and follow the prompts\n\n' +
-        'Or use your browser menu: Settings → Install StockPilot'
+        '💻 Desktop:\n1. Look for install icon in address bar\n2. Click and follow prompts'
     }
 
     alert(instructions)
   }
 }
 
-// Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   const app = new POSApp()
-
-  // Expose app instance globally for development/debugging
   ;(window as any).__posApp = app
 })
 
-// Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/service-worker.js')
-      .then(registration => {
-        console.log('✅ Service Worker registered:', registration)
-      })
-      .catch(error => {
-        console.warn('⚠️ Service Worker registration failed:', error)
-      })
+      .then(() => console.log('✅ Service Worker registered'))
+      .catch(() => console.warn('⚠️ Service Worker registration failed'))
   })
 }

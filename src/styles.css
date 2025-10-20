@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 
-/* Custom styles for POS layout consistency */
 .pos-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -13,19 +12,12 @@
   }
 }
 
-/* Smooth transitions */
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom scrollbar for cart */
 .cart-scroll::-webkit-scrollbar {
   width: 8px;
 }
@@ -35,54 +27,35 @@ body {
   border-radius: 0.5rem;
 }
 
-.dark .cart-scroll::-webkit-scrollbar-track {
-  background: linear-gradient(to bottom, transparent, rgba(107, 45, 92, 0.2));
-}
-
 .cart-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #6B2D5C, #C4A56A);
   border-radius: 0.5rem;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-.dark .cart-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #8B4789, #9B8558);
 }
 
 .cart-scroll::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #8B4789, #C4A56A);
 }
 
-.dark .cart-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #6B2D5C, #C4A56A);
-}
-
-/* Print-specific styles */
 @media print {
   body * {
     visibility: hidden;
   }
-
   .print-content,
   .print-content * {
     visibility: visible;
   }
-
   .print-content {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
   }
-
   @page {
     size: 80mm auto;
     margin: 0;
   }
 }
 
-/* Animations */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -142,29 +115,15 @@ body {
   animation: spin-slow 8s linear infinite;
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(196, 165, 106, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(196, 165, 106, 0.6);
-  }
-}
-
-/* Product card hover effect - removed, now handled by tailwind classes */
-
-/* Mobile: active state instead of hover */
 @media (max-width: 640px) {
   .product-card:hover {
     transform: translateY(0) !important;
   }
-  
   .product-card:active {
     transform: scale(0.95) !important;
   }
 }
 
-/* Line clamp utility for mobile */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -172,7 +131,6 @@ body {
   overflow: hidden;
 }
 
-/* Button loading state */
 .btn-loading {
   opacity: 0.5;
   cursor: not-allowed;
