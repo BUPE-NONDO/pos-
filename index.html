@@ -21,72 +21,56 @@
       rel="stylesheet"
     />
     
-    <title>StockPilot - Pharmacy POS Terminal</title>
-    <meta name="description" content="Modern pharmacy point-of-sale system for efficient transaction processing" />
+    <title>Taolo POS - Zambia Point of Sale</title>
+    <meta name="description" content="Modern point-of-sale system for Zambian businesses" />
   </head>
   
   <body>
-    <div class="bg-primary min-h-screen text-white transition-colors">
+    <div class="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors">
       
-      <!-- Hero Section with Background Image -->
-      <div class="relative h-32 sm:h-40 overflow-hidden border-b-2 border-gold/30">
-        <div class="absolute inset-0 bg-primary"></div>
-        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=300&fit=crop" alt="Healthcare Professional" class="absolute inset-0 w-full h-full object-cover opacity-20" />
-        <div class="relative z-10 h-full flex items-center justify-center text-center px-4">
-          <div>
-            <h1 class="text-2xl sm:text-4xl font-display font-bold text-gold drop-shadow-lg mb-2">StockPilot Pharmacy POS</h1>
-            <p class="text-sm sm:text-base text-white/90 italic">Professional Healthcare Solutions</p>
-          </div>
-        </div>
-      </div>
-
       <!-- Header/Navigation Bar -->
-      <header class="flex items-center justify-between border-b border-gold/20 px-3 sm:px-6 lg:px-8 py-3 bg-gradient-to-r from-primary via-accent to-primary dark:from-purple-dark dark:via-primary dark:to-purple-dark sticky top-0 z-20 shadow-premium backdrop-blur-sm">
-        <div class="flex items-center gap-2 sm:gap-4">
-          <!-- Gear+Lightbulb Logo -->
-          <div class="flex items-center gap-2 sm:gap-3">
-            <svg class="h-5 w-5 sm:h-7 sm:w-7 text-gold drop-shadow-lg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Gear outer ring -->
-              <path d="M50 10 L55 20 L67 18 L70 30 L82 32 L80 44 L90 50 L80 56 L82 68 L70 70 L67 82 L55 80 L50 90 L45 80 L33 82 L30 70 L18 68 L20 56 L10 50 L20 44 L18 32 L30 30 L33 18 L45 20 L50 10Z" fill="currentColor" opacity="0.9"/>
-              <!-- Gear inner circle -->
-              <circle cx="50" cy="50" r="20" fill="#6B2D5C"/>
-              <!-- Lightbulb -->
-              <path d="M50 35 Q45 38 45 43 Q45 48 47 50 L47 55 Q47 57 50 57 Q53 57 53 55 L53 50 Q55 48 55 43 Q55 38 50 35Z" fill="#C4A56A"/>
-              <!-- Lightbulb base -->
-              <rect x="48" y="57" width="4" height="3" rx="1" fill="#C4A56A"/>
-              <!-- Light rays -->
-              <line x1="50" y1="28" x2="50" y2="32" stroke="#C4A56A" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="60" y1="33" x2="57" y2="36" stroke="#C4A56A" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="40" y1="33" x2="43" y2="36" stroke="#C4A56A" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <h2 class="text-base sm:text-xl font-display font-bold text-white">
-              StockPilot <span class="text-gold">POS</span>
-            </h2>
+      <header class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-8 py-4 bg-white dark:bg-gray-900 sticky top-0 z-20 shadow-sm">
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Simplified Logo -->
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center">
+              <svg class="h-5 w-5 sm:h-6 sm:w-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+                Taolo POS
+              </h2>
+              <p class="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">Zambia</p>
+            </div>
           </div>
         </div>
         
-        <div class="flex items-center gap-2 sm:gap-3">
-          <p class="text-xs sm:text-sm font-medium hidden md:block text-white/90">
-            Cashier ID: 
-            <span id="userIdDisplay" class="font-mono text-xs px-2 py-1 rounded-md bg-gold/20 border border-gold/30 text-gold">
+        <div class="flex items-center gap-3 sm:gap-4">
+          <p class="text-xs sm:text-sm font-medium hidden md:flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            Cashier: 
+            <span id="userIdDisplay" class="font-mono text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
               Loading...
             </span>
           </p>
           
           <!-- Install App Button -->
-          <button id="installButton" class="hidden px-2 py-1.5 sm:px-3 sm:py-2 bg-gold text-primary text-xs font-semibold rounded-lg hover:bg-gold-dark hover:shadow-glow-gold transition-all duration-300 shadow-md flex items-center gap-1 sm:gap-2" aria-label="Install app">
+          <button id="installButton" class="hidden px-3 py-2 bg-primary text-white text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors duration-200 shadow-sm flex items-center gap-2" aria-label="Install app">
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
               <path d="M240,136v64a16,16,0,0,1-16,16H32a16,16,0,0,1-16-16V136a16,16,0,0,1,16-16H80a8,8,0,0,1,0,16H32v64H224V136H176a8,8,0,0,1,0-16h48A16,16,0,0,1,240,136ZM85.66,77.66,120,43.31V128a8,8,0,0,0,16,0V43.31l34.34,34.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,77.66Z"></path>
             </svg>
-            <span class="hidden md:inline">Install App</span>
+            <span class="hidden md:inline">Install</span>
           </button>
           
           <!-- Dark Mode Toggle Button -->
-          <button id="darkModeToggle" class="p-2 rounded-full hover:bg-white/10 transition-all duration-300" aria-label="Toggle dark mode">
-            <svg id="moonIcon" class="h-5 w-5 sm:h-6 sm:w-6 text-gold transition-opacity" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200" aria-label="Toggle dark mode">
+            <svg id="moonIcon" class="h-5 w-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
               <path d="M216.7,152.6a8,8,0,0,1,11.5,8.8A104,104,0,0,1,64,64a8,8,0,0,1,8.8-11.5,112.16,112.16,0,0,0-5.74,1.86,104.28,104.28,0,0,0,149.62,149.62A112.16,112.16,0,0,0,216.7,152.6Z"></path>
             </svg>
-            <svg id="sunIcon" class="h-5 w-5 sm:h-6 sm:w-6 text-gold transition-opacity hidden" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <svg id="sunIcon" class="h-5 w-5 text-gray-600 dark:text-gray-400 hidden" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
               <path d="M128,16a8,8,0,0,0-8,8V56a8,8,0,0,0,16,0V24A8,8,0,0,0,128,16Zm96,96H200a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16ZM56,120H24a8,8,0,0,0,0,16H56a8,8,0,0,0,0-16Zm10.24-60.24a8,8,0,0,0,0,11.31L83.31,83.31a8,8,0,0,0,11.32-11.32L77.56,58.69A8,8,0,0,0,66.24,59.76ZM172.69,72a8,8,0,0,0,11.32,0l17.07-17.07a8,8,0,0,0-11.32-11.32L172.69,60.68A8,8,0,0,0,172.69,72ZM197.31,183.31l17.07,17.07a8,8,0,0,0,11.32-11.32L208.62,172a8,8,0,0,0-11.31,11.31ZM83.31,172.69a8,8,0,0,0-11.32,11.32l17.07,17.07a8,8,0,0,0,11.32-11.32ZM128,192a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V200A8,8,0,0,0,128,192ZM128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Z"></path>
             </svg>
           </button>
@@ -97,136 +81,124 @@
       <main class="pos-container">
 
         <!-- POS Catalog (Left Side - 2/3rds on Desktop) -->
-        <section class="p-4 sm:p-6 lg:p-8 bg-primary/95 border-r border-gold/30 flex flex-col h-full">
-          <h1 class="text-2xl sm:text-3xl font-display font-bold mb-4 text-gold">Pharmacy Catalog</h1>
+        <section class="p-6 sm:p-8 lg:p-10 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col h-full">
+          <h1 class="text-2xl sm:text-3xl font-semibold mb-6 text-gray-900 dark:text-white">Products</h1>
 
           <!-- Search and Filter -->
-          <div class="mb-6 sticky top-0 z-10 bg-purple-dark py-2 rounded-xl border border-gold/20">
-            <div class="relative group">
+          <div class="mb-6">
+            <div class="relative">
               <!-- Search Icon -->
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gold/70 group-focus-within:text-gold transition-colors duration-300" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
+              <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
               </svg>
               <input 
                 id="productSearch" 
                 type="text" 
-                class="w-full h-12 rounded-xl bg-primary/30 backdrop-blur-sm pl-11 pr-4 text-base text-white placeholder-gold/60 focus:outline-none focus:ring-2 focus:ring-gold focus:bg-primary/40 border-2 border-gold/30 hover:border-gold/50 transition-all duration-300" 
-                placeholder="Search products by name or SKU..."
+                class="w-full h-12 rounded-xl bg-gray-50 dark:bg-gray-800 pl-12 pr-4 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary border border-gray-200 dark:border-gray-700 transition-all duration-200" 
+                placeholder="Search products..."
                 autocomplete="off"
               />
             </div>
           </div>
 
           <!-- Product Grid (Scrollable) -->
-          <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 overflow-y-auto pb-4 flex-grow">
+          <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-4 flex-grow">
             <!-- Products will be rendered here by TypeScript -->
           </div>
         </section>
 
         <!-- POS Cart (Right Side - 1/3rd on Desktop) -->
-        <section class="p-4 sm:p-6 lg:p-8 bg-primary/90 flex flex-col shadow-inner border-l border-gold/30">
-          <h2 class="text-2xl sm:text-3xl font-display font-bold text-gold mb-4 drop-shadow-lg">Transaction Cart</h2>
+        <section class="p-6 sm:p-8 lg:p-10 bg-gray-50 dark:bg-gray-800 flex flex-col">
+          <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white mb-6">Cart</h2>
 
           <!-- Cart Items List (Scrollable) -->
-          <div id="cartItemsList" class="cart-scroll flex-grow overflow-y-auto mb-6 space-y-3 p-2 -m-2">
-            <p id="emptyCartMessage" class="text-gold/70 italic text-center pt-8 text-sm">
-              Click on products to start a new sale or quote.
+          <div id="cartItemsList" class="cart-scroll flex-grow overflow-y-auto mb-6 space-y-3">
+            <p id="emptyCartMessage" class="text-gray-400 dark:text-gray-500 text-center pt-12 text-sm">
+              Add products to get started
             </p>
             <!-- Cart items rendered here by TypeScript -->
           </div>
 
           <!-- Transaction Summary & Actions -->
-          <div class="border-t-2 border-gold/40 pt-4 space-y-3">
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
             <!-- Totals -->
-            <div class="flex justify-between text-base font-medium text-white/90">
-              <span>Subtotal:</span>
-              <span id="subtotalDisplay" class="font-semibold text-gold">ZMW 0.00</span>
+            <div class="flex justify-between text-base text-gray-600 dark:text-gray-400">
+              <span>Subtotal</span>
+              <span id="subtotalDisplay" class="font-medium text-gray-900 dark:text-white">ZMW 0.00</span>
             </div>
-            <div class="flex justify-between text-base font-medium text-white/90">
-              <span>Tax (16% VAT):</span>
-              <span id="taxDisplay" class="font-semibold text-gold">ZMW 0.00</span>
+            <div class="flex justify-between text-base text-gray-600 dark:text-gray-400">
+              <span>Tax (16%)</span>
+              <span id="taxDisplay" class="font-medium text-gray-900 dark:text-white">ZMW 0.00</span>
             </div>
-            <div class="flex justify-between text-2xl font-extrabold border-t-2 border-gold/40 pt-3 mt-3">
-              <span class="font-display text-gold drop-shadow-lg">TOTAL:</span>
-              <span id="totalDisplay" class="font-display text-gold drop-shadow-lg">ZMW 0.00</span>
+            <div class="flex justify-between text-xl font-semibold border-t border-gray-200 dark:border-gray-700 pt-4">
+              <span class="text-gray-900 dark:text-white">Total</span>
+              <span id="totalDisplay" class="text-gray-900 dark:text-white">ZMW 0.00</span>
             </div>
 
             <!-- Action Buttons -->
             <div class="pt-4 space-y-3">
               <button 
                 id="chargeButton" 
-                class="w-full h-14 bg-gradient-purple-gold text-white font-bold text-lg rounded-xl shadow-premium hover:shadow-glow-gold transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-premium" 
+                class="w-full h-14 bg-primary text-white font-semibold text-lg rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed shadow-sm" 
                 disabled
                 aria-label="Complete transaction"
               >
-                CHARGE <span id="chargeAmount" class="ml-2">ZMW 0.00</span>
+                Charge <span id="chargeAmount" class="ml-2">ZMW 0.00</span>
               </button>
               
               <button 
                 id="quoteButton" 
-                class="w-full h-12 bg-transparent border-2 border-gold text-gold font-semibold rounded-xl hover:bg-gold hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gold" 
+                class="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed" 
                 disabled
                 aria-label="Save as quotation"
               >
-                Save as Quotation
+                Save Quotation
               </button>
               
               <button 
                 id="clearButton" 
-                class="w-full h-12 bg-red-50 border-2 border-red-200 text-red-700 font-medium rounded-xl hover:bg-red-100 hover:border-red-300 dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-300 dark:hover:bg-red-900/40 transition-all duration-300"
+                class="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-red-600 dark:text-red-400 font-medium rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-all duration-200"
                 aria-label="Clear transaction"
               >
-                Clear Transaction
+                Clear Cart
               </button>
             </div>
 
             <!-- Message Display -->
-            <div id="statusMessage" class="hidden p-3 rounded-lg text-center font-medium transition-opacity duration-300 mt-4"></div>
+            <div id="statusMessage" class="hidden p-3 rounded-lg text-center font-medium transition-opacity duration-200 mt-4"></div>
           </div>
         </section>
       </main>
       
       <!-- About Section Modal (Hidden by default) -->
-      <div id="aboutModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-primary max-w-2xl w-full rounded-2xl shadow-premium border-2 border-gold/40 overflow-hidden transform transition-all duration-300">
-          <div class="relative h-48 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=400&fit=crop" alt="Healthcare Team" class="w-full h-full object-cover opacity-40" />
-            <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent"></div>
-            <div class="absolute bottom-4 left-6">
-              <h2 class="text-3xl font-display font-bold text-gold">About StockPilot POS</h2>
-              <p class="text-white/90 text-sm mt-1">Professional Pharmacy Management</p>
-            </div>
-            <button id="closeAboutBtn" class="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div id="aboutModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 max-w-lg w-full rounded-2xl shadow-xl overflow-hidden">
+          <div class="relative p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">About Taolo POS</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Zambia Point of Sale System</p>
+            <button id="closeAboutBtn" class="absolute top-4 right-4 w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
           <div class="p-6 space-y-4">
-            <div class="flex items-start gap-4">
-              <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200&h=200&fit=crop" alt="Healthcare" class="w-20 h-20 rounded-xl object-cover border-2 border-gold/30" />
-              <div class="flex-1">
-                <h3 class="text-xl font-semibold text-gold mb-2">Modern Healthcare Solutions</h3>
-                <p class="text-white/80 text-sm leading-relaxed">
-                  StockPilot POS is a comprehensive pharmacy management system designed for modern healthcare providers. 
-                  Our intuitive interface helps streamline operations, manage inventory, and provide excellent patient care.
-                </p>
-              </div>
-            </div>
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+              Taolo POS is a modern point-of-sale system designed to streamline operations, manage inventory, and deliver excellent service for Zambian businesses.
+            </p>
             <div class="grid grid-cols-2 gap-3">
-              <div class="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-gold/20">
-                <p class="text-gold font-semibold mb-1">Real-time Processing</p>
-                <p class="text-white/70 text-xs">Instant transaction handling</p>
+              <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                <p class="text-gray-900 dark:text-white font-medium text-sm mb-1">Real-time</p>
+                <p class="text-gray-500 dark:text-gray-400 text-xs">Instant processing</p>
               </div>
-              <div class="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-gold/20">
-                <p class="text-gold font-semibold mb-1">Inventory Control</p>
-                <p class="text-white/70 text-xs">Smart stock management</p>
+              <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                <p class="text-gray-900 dark:text-white font-medium text-sm mb-1">Inventory</p>
+                <p class="text-gray-500 dark:text-gray-400 text-xs">Smart tracking</p>
               </div>
             </div>
-            <div class="pt-3 border-t border-gold/20 flex items-center justify-between">
-              <p class="text-white/60 text-xs">Need help? Contact support</p>
-              <button id="closeAboutBtn2" class="px-4 py-2 bg-gold text-primary font-semibold rounded-lg hover:bg-gold-dark transition-colors text-sm">
-                Got it!
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+              <button id="closeAboutBtn2" class="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors text-sm">
+                Close
               </button>
             </div>
           </div>
@@ -234,23 +206,25 @@
       </div>
 
       <!-- Help Button (Fixed) -->
-      <button id="helpButton" class="fixed bottom-4 left-4 z-10 w-12 h-12 bg-gradient-to-br from-gold to-gold-dark text-primary rounded-full shadow-premium hover:shadow-glow-gold transition-all duration-300 flex items-center justify-center group">
-        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 256 256">
+      <button id="helpButton" class="fixed bottom-6 left-6 z-10 w-12 h-12 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center border border-gray-200 dark:border-gray-700">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 256 256">
           <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,168a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm8-48.72V144a8,8,0,0,1-16,0v-8a8,8,0,0,1,8-8,20,20,0,1,0-20-20,8,8,0,0,1-16,0,36,36,0,1,1,44,35.28Z"></path>
         </svg>
       </button>
 
       <!-- Powered by Gifted Solutions Footer -->
-      <footer class="fixed bottom-4 right-4 z-10 pointer-events-none">
-        <div class="bg-gradient-to-r from-primary/95 to-accent/95 backdrop-blur-md rounded-2xl shadow-premium border border-gold/30 px-4 py-2 flex items-center gap-2 pointer-events-auto group hover:shadow-glow-gold transition-all duration-300">
-          <!-- Small gear icon -->
-          <svg class="h-5 w-5 text-gold animate-spin-slow" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 10 L55 20 L67 18 L70 30 L82 32 L80 44 L90 50 L80 56 L82 68 L70 70 L67 82 L55 80 L50 90 L45 80 L33 82 L30 70 L18 68 L20 56 L10 50 L20 44 L18 32 L30 30 L33 18 L45 20 L50 10Z" fill="currentColor" opacity="0.9"/>
-            <circle cx="50" cy="50" r="15" fill="#6B2D5C"/>
-          </svg>
-          <div class="flex flex-col">
-            <p class="text-xs font-semibold text-white leading-tight">Powered by <span class="text-gold">GIFTED SOLUTIONS</span></p>
-            <p class="text-[10px] text-gold/80 italic leading-tight">Bringing Ideas to Life</p>
+      <footer class="fixed bottom-6 right-6 z-10">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 px-4 py-2.5 flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+            <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+              <path d="M2 17L12 22L22 17"/>
+              <path d="M2 12L12 17L22 12"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-gray-900 dark:text-white leading-tight">Gifted Solutions</p>
+            <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">Bringing Ideas to Life</p>
           </div>
         </div>
       </footer>

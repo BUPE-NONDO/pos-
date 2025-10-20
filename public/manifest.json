@@ -1,13 +1,13 @@
 {
-  "name": "StockPilot POS - Pharmacy Terminal",
-  "short_name": "StockPilot",
-  "description": "Modern pharmacy point-of-sale system powered by Gifted Solutions",
+  "name": "Taolo POS - Zambia Point of Sale",
+  "short_name": "Taolo POS",
+  "description": "Modern point-of-sale system for Zambian businesses powered by Gifted Solutions",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1A0F1A",
+  "background_color": "#FAFAFA",
   "theme_color": "#6B2D5C",
   "orientation": "portrait",
-  "categories": ["business", "productivity", "medical"],
+  "categories": ["business", "productivity", "finance"],
   "icons": [
     {
       "src": "/icons/icon-512x512.svg",

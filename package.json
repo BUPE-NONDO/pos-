@@ -1,7 +1,7 @@
 {
-  "name": "stockpilot-pos",
+  "name": "taolo-pos",
   "version": "1.0.0",
-  "description": "Modern Pharmacy POS Terminal with Supabase backend",
+  "description": "Modern Point of Sale System for Zambian Businesses",
   "type": "module",
   "scripts": {
     "dev": "vite",

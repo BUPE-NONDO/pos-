@@ -6,9 +6,9 @@ import { getSupabaseStatus, isSupabaseConfigured } from '@/lib/supabase'
 import './styles.css'
 
 /**
- * StockPilot POS Application - Powered by Gifted Solutions
- * Modern pharmacy point-of-sale system with dark purple theme
- * @version 4.0.0
+ * Taolo POS Application - Powered by Gifted Solutions
+ * Modern point-of-sale system for Zambian businesses
+ * @version 1.0.0
  */
 class POSApp {
   private cart: CartItem[] = []
@@ -52,7 +52,7 @@ class POSApp {
     this.setupDarkMode()
     this.setupPWAInstall()
     this.checkBackendConnection()
-    console.log('✅ StockPilot POS v4.0 - Gifted Solutions Edition')
+    console.log('✅ Taolo POS v1.0 - Zambia Edition')
   }
 
   private loadProducts(): void {
@@ -156,6 +156,10 @@ class POSApp {
       html.classList.add('dark')
       this.dom.sunIcon?.classList.remove('hidden')
       this.dom.moonIcon?.classList.add('hidden')
+    } else {
+      html.classList.remove('dark')
+      this.dom.sunIcon?.classList.add('hidden')
+      this.dom.moonIcon?.classList.remove('hidden')
     }
   }
 
@@ -234,7 +238,10 @@ class POSApp {
 
       await DatabaseService.saveTransaction(transaction)
       PrintService.printReceipt(transaction)
-      this.showMessage(`Transaction Complete! ${POSService.formatCurrency(totals.total)}`, 'success')
+      this.showMessage(
+        `Transaction Complete! ${POSService.formatCurrency(totals.total)}`,
+        'success'
+      )
       this.cart = POSService.clearCart()
       this.renderCart()
     } catch (error) {
@@ -319,29 +326,27 @@ class POSApp {
 
     if (this.filteredProducts.length === 0) {
       this.dom.productGrid.innerHTML =
-        '<p class="col-span-full text-center text-stone-500 pt-10">No products match your search.</p>'
+        '<p class="col-span-full text-center text-gray-500 dark:text-gray-400 pt-10">No products match your search.</p>'
       return
     }
 
     this.filteredProducts.forEach((product, index) => {
       const card = document.createElement('button')
       card.className =
-        'product-card group p-4 bg-gradient-to-br from-primary/60 via-purple-dark/80 to-primary/60 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-glow-gold border-2 border-gold/30 hover:border-gold/60 transition-all duration-300 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center hover:-translate-y-1 hover:scale-[1.02] active:scale-95'
-      
-      card.style.animationDelay = `${index * 0.05}s`
+        'product-card group p-4 bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover border border-gray-200 dark:border-gray-700 transition-all duration-200 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center hover:-translate-y-0.5 active:scale-[0.98]'
+
+      card.style.animationDelay = `${index * 0.03}s`
 
       card.innerHTML = `
-        <div class="w-20 h-20 sm:w-full sm:h-24 flex-shrink-0 rounded-xl bg-gradient-to-br from-purple-dark/50 to-primary/50 flex items-center justify-center overflow-hidden ring-2 ring-gold/40 group-hover:ring-gold/70 transition-all duration-300">
+        <div class="w-20 h-20 sm:w-full sm:h-28 flex-shrink-0 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
           <img src="${product.image || 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'}" 
                alt="${product.name}" 
-               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                onerror="this.src='https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'" />
         </div>
         <div class="flex-1 sm:w-full sm:mt-3">
-          <p class="text-base sm:text-sm font-semibold text-white line-clamp-2 sm:truncate group-hover:text-gold transition-colors duration-300">${product.name}</p>
-          <div class="inline-block mt-1 px-3 py-1 rounded-full bg-gradient-to-r from-gold/20 to-gold/30 border border-gold/40">
-            <p class="text-sm sm:text-xs font-bold text-gold">${POSService.formatCurrency(product.price)}</p>
-          </div>
+          <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-2">${product.name}</p>
+          <p class="text-base font-semibold text-primary">${POSService.formatCurrency(product.price)}</p>
         </div>
       `
 
@@ -367,20 +372,20 @@ class POSApp {
         const lineTotal = item.price * item.quantity
         const itemElement = document.createElement('div')
         itemElement.className =
-          'cart-item-fade-in flex justify-between items-center bg-gradient-to-r from-primary/50 to-purple-dark/50 backdrop-blur-sm p-3 rounded-xl shadow-md border-2 border-gold/30 hover:border-gold/50 transition-all duration-300'
+          'cart-item-fade-in flex justify-between items-center bg-white dark:bg-gray-900 p-3.5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200'
 
         itemElement.innerHTML = `
-          <div class="flex flex-col flex-grow">
-            <span class="font-semibold text-sm text-gold">${item.name}</span>
-            <span class="text-xs text-white/70">${POSService.formatCurrency(item.price)} x ${item.quantity}</span>
+          <div class="flex flex-col flex-grow min-w-0">
+            <span class="font-medium text-sm text-gray-900 dark:text-white truncate">${item.name}</span>
+            <span class="text-xs text-gray-500 dark:text-gray-400">${POSService.formatCurrency(item.price)} × ${item.quantity}</span>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="flex items-center space-x-1 bg-purple-dark/60 rounded-full px-1 py-0.5 border border-gold/30">
-              <button class="qty-btn w-7 h-7 bg-gradient-to-br from-primary to-accent text-white rounded-full text-sm font-bold hover:shadow-glow-purple active:scale-90 transition-all duration-200" data-id="${item.id}" data-change="-1">-</button>
-              <span class="font-bold text-sm w-6 text-center text-gold">${item.quantity}</span>
-              <button class="qty-btn w-7 h-7 bg-gradient-to-br from-primary to-gold text-white rounded-full text-sm font-bold hover:shadow-glow-gold active:scale-90 transition-all duration-200" data-id="${item.id}" data-change="1">+</button>
+          <div class="flex items-center gap-3 ml-3">
+            <div class="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg px-1 py-0.5">
+              <button class="qty-btn w-7 h-7 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 active:scale-95 transition-all duration-150" data-id="${item.id}" data-change="-1">−</button>
+              <span class="font-semibold text-sm w-8 text-center text-gray-900 dark:text-white">${item.quantity}</span>
+              <button class="qty-btn w-7 h-7 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 active:scale-95 transition-all duration-150" data-id="${item.id}" data-change="1">+</button>
             </div>
-            <span class="font-bold text-base text-gold w-20 text-right">${POSService.formatCurrency(lineTotal)}</span>
+            <span class="font-semibold text-base text-gray-900 dark:text-white w-20 text-right">${POSService.formatCurrency(lineTotal)}</span>
           </div>
         `
 
@@ -406,14 +411,17 @@ class POSApp {
 
   private showMessage(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
     const colorMap = {
-      success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      error: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-      warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      info: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      success:
+        'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
+      error:
+        'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800',
+      warning:
+        'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800',
+      info: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
     }
 
     this.dom.statusMessage.textContent = message
-    this.dom.statusMessage.className = `${colorMap[type]} p-3 rounded-lg text-center font-medium transition-opacity duration-300 mt-4 fade-in`
+    this.dom.statusMessage.className = `${colorMap[type]} p-3 rounded-lg text-center text-sm font-medium border transition-opacity duration-200 mt-4 fade-in`
     this.dom.statusMessage.classList.remove('hidden')
 
     setTimeout(() => {
@@ -474,11 +482,9 @@ class POSApp {
     let instructions = ''
 
     if (/iphone|ipad|ipod/.test(userAgent)) {
-      instructions =
-        '📱 iOS:\n1. Tap Share (⬆️)\n2. Add to Home Screen\n3. Tap Add'
+      instructions = '📱 iOS:\n1. Tap Share (⬆️)\n2. Add to Home Screen\n3. Tap Add'
     } else if (/android/.test(userAgent)) {
-      instructions =
-        '📱 Android:\n1. Tap menu (⋮)\n2. Add to Home screen\n3. Follow prompts'
+      instructions = '📱 Android:\n1. Tap menu (⋮)\n2. Add to Home screen\n3. Follow prompts'
     } else {
       instructions =
         '💻 Desktop:\n1. Look for install icon in address bar\n2. Click and follow prompts'
