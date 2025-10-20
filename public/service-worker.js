@@ -1,10 +1,10 @@
 /**
  * Service Worker for StockPilot POS
  * Provides offline functionality and caching for the PWA
- * Version: 3.0 - Gifted Solutions Redesign - Updated: 2025-10-20 15:00
+ * Version: 4.0 - Healthcare Images Update - Updated: 2025-10-20 15:05
  */
 
-const CACHE_VERSION = '3.0-gifted-20251020'
+const CACHE_VERSION = '4.0-healthcare-20251020-1505'
 const CACHE_NAME = `stockpilot-pos-v${CACHE_VERSION}`
 const RUNTIME_CACHE = `stockpilot-runtime-v${CACHE_VERSION}`
 
@@ -32,27 +32,29 @@ self.addEventListener('install', (event) => {
   self.skipWaiting()
 })
 
-// Activate event - clean up old caches
+// Activate event - clean up ALL old caches
 self.addEventListener('activate', (event) => {
   console.log('[Service Worker] Activating...')
   
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames
-          .filter((cacheName) => {
-            return cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE
-          })
-          .map((cacheName) => {
-            console.log('[Service Worker] Deleting old cache:', cacheName)
-            return caches.delete(cacheName)
-          })
+        cacheNames.map((cacheName) => {
+          // Delete ALL caches to force fresh fetch
+          console.log('[Service Worker] Deleting cache:', cacheName)
+          return caches.delete(cacheName)
+        })
       )
+    }).then(() => {
+      // Take control immediately and reload all clients
+      return self.clients.claim()
+    }).then(() => {
+      // Force reload all clients
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => client.navigate(client.url))
+      })
     })
   )
-  
-  // Take control immediately
-  return self.clients.claim()
 })
 
 // Fetch event - network first, fallback to cache
