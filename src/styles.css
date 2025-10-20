@@ -108,6 +108,25 @@ body {
     0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
+/* Mobile: active state instead of hover */
+@media (max-width: 640px) {
+  .product-card:hover {
+    transform: none;
+  }
+  
+  .product-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Line clamp utility for mobile */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 /* Button loading state */
 .btn-loading {
   opacity: 0.5;

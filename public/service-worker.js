@@ -1,10 +1,12 @@
 /**
  * Service Worker for StockPilot POS
  * Provides offline functionality and caching for the PWA
+ * Version: 2.0 - Updated: 2025-10-20 14:30
  */
 
-const CACHE_NAME = 'stockpilot-pos-v1'
-const RUNTIME_CACHE = 'stockpilot-runtime'
+const CACHE_VERSION = '2.0-20251020'
+const CACHE_NAME = `stockpilot-pos-v${CACHE_VERSION}`
+const RUNTIME_CACHE = `stockpilot-runtime-v${CACHE_VERSION}`
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [
@@ -55,8 +57,10 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - network first, fallback to cache
 self.addEventListener('fetch', (event) => {
-  // Skip cross-origin requests
+  // Skip cross-origin requests (including external images from Unsplash, etc.)
   if (!event.request.url.startsWith(self.location.origin)) {
+    // For external resources, just fetch them normally without caching
+    event.respondWith(fetch(event.request))
     return
   }
 

@@ -75,70 +75,70 @@ class POSApp {
         name: 'Paracetamol Tabs (20pk)',
         price: 45.0,
         sku: 'MED001',
-        image: 'https://placehold.co/100x100/10B981/000?text=Pills',
+        image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop',
       },
       {
         id: 2,
         name: 'Multivitamins (60 caps)',
         price: 120.0,
         sku: 'SUP002',
-        image: 'https://placehold.co/100x100/3B82F6/fff?text=Vitamins',
+        image: 'https://images.unsplash.com/photo-1550572017-4fade99d4575?w=200&h=200&fit=crop',
       },
       {
         id: 3,
         name: 'Alcohol Swabs (100pk)',
         price: 35.0,
         sku: 'FIRST03',
-        image: 'https://placehold.co/100x100/6366F1/fff?text=Swabs',
+        image: 'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=200&h=200&fit=crop',
       },
       {
         id: 4,
         name: 'Adult Diapers (10pk)',
         price: 180.0,
         sku: 'CARE004',
-        image: 'https://placehold.co/100x100/FACC15/000?text=Diapers',
+        image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=200&h=200&fit=crop',
       },
       {
         id: 5,
         name: 'Band-Aids (50 strips)',
         price: 50.0,
         sku: 'FIRST05',
-        image: 'https://placehold.co/100x100/EF4444/fff?text=BandAid',
+        image: 'https://images.unsplash.com/photo-1603560987833-5b36f7e9b5fe?w=200&h=200&fit=crop',
       },
       {
         id: 6,
         name: 'Cough Syrup (100ml)',
         price: 75.0,
         sku: 'MED006',
-        image: 'https://placehold.co/100x100/E879F9/fff?text=Syrup',
+        image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=200&h=200&fit=crop',
       },
       {
         id: 7,
         name: 'Digital Thermometer',
         price: 90.0,
         sku: 'EQUIP07',
-        image: 'https://placehold.co/100x100/F97316/fff?text=Temp',
+        image: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?w=200&h=200&fit=crop',
       },
       {
         id: 8,
         name: 'Antiseptic Cream (50g)',
         price: 60.0,
         sku: 'FIRST08',
-        image: 'https://placehold.co/100x100/FDE047/000?text=Cream',
+        image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=200&h=200&fit=crop',
       },
       {
         id: 9,
         name: 'Rehydration Salts (3pk)',
         price: 30.0,
         sku: 'SUP009',
-        image: 'https://placehold.co/100x100/A855F7/fff?text=Salts',
+        image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop',
       },
       {
         id: 10,
         name: 'Cotton Wool (200g)',
         price: 40.0,
         sku: 'FIRST10',
-        image: 'https://placehold.co/100x100/34D399/000?text=Cotton',
+        image: 'https://images.unsplash.com/photo-1612277795421-9bc7706a4a34?w=200&h=200&fit=crop',
       },
     ]
 
@@ -365,17 +365,19 @@ class POSApp {
     this.filteredProducts.forEach(product => {
       const card = document.createElement('button')
       card.className =
-        'product-card p-3 bg-white dark:bg-stone-800 rounded-xl shadow-lg border border-stone-200 dark:border-stone-700 text-left hover:ring-2 hover:ring-primary transition duration-150 flex flex-col items-center text-center'
+        'product-card p-4 bg-white dark:bg-stone-800 rounded-xl shadow-lg border border-stone-200 dark:border-stone-700 text-left hover:ring-2 hover:ring-primary transition duration-150 flex items-center sm:flex-col sm:items-center gap-4 sm:gap-0 sm:text-center active:scale-95'
 
       card.innerHTML = `
-        <div class="w-full h-20 mb-2 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center overflow-hidden">
-          <img src="${product.image || 'https://placehold.co/80x80/2DD4BF/000?text=Item'}" 
+        <div class="w-20 h-20 sm:w-full sm:h-24 flex-shrink-0 rounded-lg bg-stone-100 dark:bg-stone-700/50 flex items-center justify-center overflow-hidden">
+          <img src="${product.image || 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'}" 
                alt="${product.name}" 
-               class="h-full w-auto object-cover opacity-80"
-               onerror="this.src='https://placehold.co/80x80/2DD4BF/000?text=Item'" />
+               class="w-full h-full object-cover"
+               onerror="this.src='https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'" />
         </div>
-        <p class="text-sm font-semibold text-stone-900 dark:text-stone-100 w-full truncate mt-1">${product.name}</p>
-        <p class="text-xs font-bold text-primary w-full mt-1">${POSService.formatCurrency(product.price)}</p>
+        <div class="flex-1 sm:w-full sm:mt-3">
+          <p class="text-base sm:text-sm font-semibold text-stone-900 dark:text-stone-100 line-clamp-2 sm:truncate">${product.name}</p>
+          <p class="text-sm sm:text-xs font-bold text-primary mt-1">${POSService.formatCurrency(product.price)}</p>
+        </div>
       `
 
       card.addEventListener('click', () => this.addToCart(product.id))

@@ -29,19 +29,19 @@
     <div class="bg-background-light dark:bg-background-dark min-h-screen text-stone-800 dark:text-stone-200 transition-colors">
       
       <!-- Header/Navigation Bar -->
-      <header class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 px-4 sm:px-8 py-3 bg-white dark:bg-stone-900 sticky top-0 z-20 shadow-md">
-        <div class="flex items-center gap-4">
+      <header class="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 px-3 sm:px-6 lg:px-8 py-3 bg-white dark:bg-stone-900 sticky top-0 z-20 shadow-md">
+        <div class="flex items-center gap-2 sm:gap-4">
           <!-- Logo -->
-          <div class="flex items-center gap-3">
-            <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <div class="flex items-center gap-2 sm:gap-3">
+            <svg class="h-5 w-5 sm:h-6 sm:w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
               <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
             </svg>
-            <h2 class="text-xl font-extrabold text-primary">StockPilot POS</h2>
+            <h2 class="text-base sm:text-xl font-extrabold text-primary">StockPilot POS</h2>
           </div>
         </div>
         
-        <div class="flex items-center gap-2 sm:gap-4">
-          <p class="text-sm font-medium hidden sm:block">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <p class="text-xs sm:text-sm font-medium hidden md:block">
             Cashier ID: 
             <span id="userIdDisplay" class="font-mono text-xs p-1 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
               Loading...
@@ -49,12 +49,11 @@
           </p>
           
           <!-- Install App Button -->
-          <button id="installButton" class="hidden px-3 py-2 sm:px-4 sm:py-2 bg-primary text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors shadow-md flex items-center gap-2" aria-label="Install app">
-            <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <button id="installButton" class="hidden px-2 py-1.5 sm:px-3 sm:py-2 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary/90 transition-colors shadow-md flex items-center gap-1 sm:gap-2" aria-label="Install app">
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
               <path d="M240,136v64a16,16,0,0,1-16,16H32a16,16,0,0,1-16-16V136a16,16,0,0,1,16-16H80a8,8,0,0,1,0,16H32v64H224V136H176a8,8,0,0,1,0-16h48A16,16,0,0,1,240,136ZM85.66,77.66,120,43.31V128a8,8,0,0,0,16,0V43.31l34.34,34.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,77.66Z"></path>
             </svg>
-            <span class="hidden sm:inline">Install App</span>
-            <span class="sm:hidden">Install</span>
+            <span class="hidden md:inline">Install App</span>
           </button>
           
           <!-- Dark Mode Toggle Button -->
@@ -74,7 +73,7 @@
 
         <!-- POS Catalog (Left Side - 2/3rds on Desktop) -->
         <section class="p-4 sm:p-6 lg:p-8 bg-catalog-bg dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex flex-col h-full">
-          <h1 class="text-3xl font-bold mb-4">Pharmacy Catalog</h1>
+          <h1 class="text-2xl sm:text-3xl font-bold mb-4">Pharmacy Catalog</h1>
 
           <!-- Search and Filter -->
           <div class="mb-6 sticky top-0 z-10 bg-catalog-bg dark:bg-stone-900 py-2">
@@ -94,14 +93,14 @@
           </div>
 
           <!-- Product Grid (Scrollable) -->
-          <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-4 flex-grow">
+          <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 overflow-y-auto pb-4 flex-grow">
             <!-- Products will be rendered here by TypeScript -->
           </div>
         </section>
 
         <!-- POS Cart (Right Side - 1/3rd on Desktop) -->
         <section class="p-4 sm:p-6 lg:p-8 bg-cart-bg dark:bg-stone-800 flex flex-col shadow-inner">
-          <h2 class="text-3xl font-bold text-primary mb-4">Transaction Cart</h2>
+          <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">Transaction Cart</h2>
 
           <!-- Cart Items List (Scrollable) -->
           <div id="cartItemsList" class="cart-scroll flex-grow overflow-y-auto mb-6 space-y-3 p-2 -m-2">
