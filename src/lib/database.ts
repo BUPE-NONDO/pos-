@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured } from './supabase'
 import { Transaction, Quotation, TransactionSchema, QuotationSchema } from '@/types/schemas'
+import { validateProductLimit, validateTransactionLimit } from './packageLimits'
 
 /**
  * Service layer for database operations
@@ -8,11 +9,112 @@ import { Transaction, Quotation, TransactionSchema, QuotationSchema } from '@/ty
 
 export class DatabaseService {
   /**
+   * Get total product count from database
+   */
+  static async getProductCount(): Promise<number> {
+    if (!isSupabaseConfigured() || !supabase) {
+      return 0
+    }
+
+    try {
+      const { count, error } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true })
+
+      if (error) {
+        console.error('Error counting products:', error)
+        return 0
+      }
+
+      return count || 0
+    } catch (error) {
+      console.error('Error in getProductCount:', error)
+      return 0
+    }
+  }
+
+  /**
+   * Get transaction count for current month
+   */
+  static async getCurrentMonthTransactionCount(): Promise<number> {
+    if (!isSupabaseConfigured() || !supabase) {
+      return 0
+    }
+
+    try {
+      const startOfMonth = new Date()
+      startOfMonth.setDate(1)
+      startOfMonth.setHours(0, 0, 0, 0)
+
+      const { count, error } = await supabase
+        .from('sales_transactions')
+        .select('*', { count: 'exact', head: true })
+        .gte('timestamp', startOfMonth.toISOString())
+
+      if (error) {
+        console.error('Error counting transactions:', error)
+        return 0
+      }
+
+      return count || 0
+    } catch (error) {
+      console.error('Error in getCurrentMonthTransactionCount:', error)
+      return 0
+    }
+  }
+
+  /**
+   * Check if user can add more products
+   */
+  static async canAddProduct(): Promise<{
+    allowed: boolean
+    message: string
+    currentCount: number
+    limit: number
+  }> {
+    const currentCount = await this.getProductCount()
+    const validation = validateProductLimit(currentCount)
+
+    return {
+      allowed: validation.allowed,
+      message: validation.message,
+      currentCount: validation.currentCount || currentCount,
+      limit: validation.limit || -1,
+    }
+  }
+
+  /**
+   * Check if user can create more transactions this month
+   */
+  static async canCreateTransaction(): Promise<{
+    allowed: boolean
+    message: string
+    currentCount: number
+    limit: number
+  }> {
+    const currentCount = await this.getCurrentMonthTransactionCount()
+    const validation = validateTransactionLimit(currentCount)
+
+    return {
+      allowed: validation.allowed,
+      message: validation.message,
+      currentCount: validation.currentCount || currentCount,
+      limit: validation.limit || -1,
+    }
+  }
+
+  /**
    * Save a completed transaction to the database
    * @param transaction - The transaction data to save
    * @returns The saved transaction ID or null on failure
    */
   static async saveTransaction(transaction: Transaction): Promise<string | null> {
+    // Check transaction limit
+    const transactionCheck = await this.canCreateTransaction()
+    if (!transactionCheck.allowed) {
+      throw new Error(transactionCheck.message)
+    }
+
     // Validate data before saving
     const validationResult = TransactionSchema.safeParse(transaction)
     if (!validationResult.success) {
