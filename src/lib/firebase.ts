@@ -32,4 +32,3 @@ export const isFirebaseConfigured = (): boolean => {
 }
 
 export default app
-

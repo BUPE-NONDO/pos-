@@ -54,9 +54,7 @@ export class POSService {
     if (existingItem) {
       // Increment quantity
       return cart.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
       )
     } else {
       // Add new item
@@ -142,8 +140,7 @@ export class POSService {
     const query = searchTerm.toLowerCase().trim()
     return products.filter(
       product =>
-        product.name.toLowerCase().includes(query) ||
-        product.sku.toLowerCase().includes(query)
+        product.name.toLowerCase().includes(query) || product.sku.toLowerCase().includes(query)
     )
   }
 
@@ -188,5 +185,3 @@ export class POSService {
     return []
   }
 }
-
-

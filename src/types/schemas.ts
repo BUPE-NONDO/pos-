@@ -81,5 +81,3 @@ export const TotalsSchema = z.object({
 })
 
 export type Totals = z.infer<typeof TotalsSchema>
-
-

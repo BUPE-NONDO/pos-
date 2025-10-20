@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Custom styles for POS layout consistency */
 .pos-container {
@@ -15,9 +15,14 @@
 
 /* Smooth transitions */
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Custom scrollbar for cart */
@@ -56,19 +61,19 @@ body {
   body * {
     visibility: hidden;
   }
-  
+
   .print-content,
   .print-content * {
     visibility: visible;
   }
-  
+
   .print-content {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
   }
-  
+
   @page {
     size: 80mm auto;
     margin: 0;
@@ -98,7 +103,9 @@ body {
 
 .product-card:hover {
   transform: scale(1.02);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 /* Button loading state */
@@ -129,5 +136,3 @@ body {
     transform: rotate(360deg);
   }
 }
-
-

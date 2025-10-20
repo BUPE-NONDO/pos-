@@ -148,7 +148,7 @@ class POSApp {
 
   private setupEventListeners(): void {
     // Search functionality
-    this.dom.productSearch.addEventListener('input', (e) => {
+    this.dom.productSearch.addEventListener('input', e => {
       const target = e.target as HTMLInputElement
       this.handleSearch(target.value)
     })
@@ -166,7 +166,8 @@ class POSApp {
     const html = document.documentElement
     const isDark =
       localStorage.getItem('darkMode') === 'true' ||
-      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      (!localStorage.getItem('darkMode') &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
 
     if (isDark) {
       html.classList.add('dark')
@@ -193,7 +194,9 @@ class POSApp {
     const status = getSupabaseStatus()
     if (!isSupabaseConfigured()) {
       console.warn('⚠️ Running in offline mode:', status)
-      console.warn('💡 Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env to enable cloud sync')
+      console.warn(
+        '💡 Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env to enable cloud sync'
+      )
     } else {
       console.log('✅ Backend connected:', status)
     }
@@ -416,7 +419,7 @@ class POSApp {
 
         // Add event listeners for quantity buttons
         itemElement.querySelectorAll('.qty-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          btn.addEventListener('click', e => {
             const target = e.target as HTMLButtonElement
             const id = parseInt(target.dataset.id!)
             const change = parseInt(target.dataset.change!)
@@ -458,13 +461,13 @@ class POSApp {
    */
   private setupPWAInstall(): void {
     // Listen for beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener('beforeinstallprompt', e => {
       // Prevent the default mini-infobar from appearing
       e.preventDefault()
-      
+
       // Store the event for later use
       this.deferredPrompt = e
-      
+
       // Show the install button
       if (this.dom.installButton) {
         this.dom.installButton.classList.remove('hidden')
@@ -483,20 +486,20 @@ class POSApp {
 
         // Show the install prompt
         this.deferredPrompt.prompt()
-        
+
         // Wait for user's response
         const { outcome } = await this.deferredPrompt.userChoice
-        
+
         if (outcome === 'accepted') {
           console.log('✅ User accepted install')
           this.showMessage('App installing...', 'success')
         } else {
           console.log('❌ User dismissed install')
         }
-        
+
         // Clear the prompt
         this.deferredPrompt = null
-        
+
         // Hide the button
         if (this.dom.installButton) {
           this.dom.installButton.classList.add('hidden')
@@ -509,7 +512,7 @@ class POSApp {
       console.log('✅ PWA installed successfully')
       this.showMessage('App installed successfully! 🎉', 'success')
       this.deferredPrompt = null
-      
+
       if (this.dom.installButton) {
         this.dom.installButton.classList.add('hidden')
       }
@@ -533,23 +536,23 @@ class POSApp {
 
     if (/iphone|ipad|ipod/.test(userAgent)) {
       // iOS devices
-      instructions = 
+      instructions =
         '📱 To install on iOS:\n\n' +
         '1. Tap the Share button (⬆️)\n' +
         '2. Scroll down and tap "Add to Home Screen"\n' +
         '3. Tap "Add" to confirm'
     } else if (/android/.test(userAgent)) {
       // Android devices
-      instructions = 
+      instructions =
         '📱 To install on Android:\n\n' +
         '1. Tap the menu (⋮) in your browser\n' +
         '2. Tap "Add to Home screen" or "Install app"\n' +
         '3. Follow the prompts'
     } else {
       // Desktop browsers
-      instructions = 
+      instructions =
         '💻 To install on your computer:\n\n' +
-        '1. Look for the install icon in your browser\'s address bar\n' +
+        "1. Look for the install icon in your browser's address bar\n" +
         '2. Click it and follow the prompts\n\n' +
         'Or use your browser menu: Settings → Install StockPilot'
     }
@@ -561,7 +564,7 @@ class POSApp {
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   const app = new POSApp()
-  
+
   // Expose app instance globally for development/debugging
   ;(window as any).__posApp = app
 })
@@ -579,5 +582,3 @@ if ('serviceWorker' in navigator) {
       })
   })
 }
-
-

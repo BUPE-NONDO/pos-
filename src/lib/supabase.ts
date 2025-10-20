@@ -1,6 +1,6 @@
 /**
  * Supabase Configuration
- * 
+ *
  * To set up your Supabase project:
  * 1. Go to https://supabase.com and create a new project
  * 2. Navigate to Project Settings > API
@@ -8,9 +8,9 @@
  * 4. Create a .env file in the project root with:
  *    VITE_SUPABASE_URL=your_project_url
  *    VITE_SUPABASE_ANON_KEY=your_anon_key
- * 
+ *
  * Database Schema Required:
- * 
+ *
  * -- Sales Transactions Table
  * CREATE TABLE sales_transactions (
  *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -25,7 +25,7 @@
  *   status TEXT NOT NULL,
  *   created_at TIMESTAMPTZ DEFAULT NOW()
  * );
- * 
+ *
  * -- Quotations Table
  * CREATE TABLE quotations (
  *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -41,7 +41,7 @@
  *   valid_until TIMESTAMPTZ,
  *   created_at TIMESTAMPTZ DEFAULT NOW()
  * );
- * 
+ *
  * -- Indexes for Performance
  * CREATE INDEX idx_sales_trans_id ON sales_transactions(trans_id);
  * CREATE INDEX idx_sales_timestamp ON sales_transactions(timestamp DESC);
@@ -55,9 +55,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 // Create Supabase client (singleton pattern)
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null
+export const supabase =
+  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
 
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = (): boolean => {
@@ -134,5 +133,3 @@ export interface Database {
     }
   }
 }
-
-

@@ -297,7 +297,11 @@ export class PrintService {
                 <td>${item.name}</td>
                 <td style="text-align: right;">${POSService.formatCurrency(item.price).replace('ZMW', '').trim()}</td>
                 <td style="text-align: center;">${item.quantity}</td>
-                <td style="text-align: right;">${POSService.formatCurrency(item.price * item.quantity).replace('ZMW', '').trim()}</td>
+                <td style="text-align: right;">${POSService.formatCurrency(
+                  item.price * item.quantity
+                )
+                  .replace('ZMW', '')
+                  .trim()}</td>
               </tr>
             `
               )
@@ -335,8 +339,10 @@ export class PrintService {
    * Check if user is on mobile device
    */
   private static isMobileDevice(): boolean {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           (window.innerWidth <= 768)
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768
+    )
   }
 
   /**
@@ -345,7 +351,7 @@ export class PrintService {
    */
   private static openPrintWindow(html: string): void {
     const isMobile = this.isMobileDevice()
-    
+
     try {
       if (isMobile) {
         // Mobile-optimized approach: Create a viewable page
@@ -368,17 +374,17 @@ export class PrintService {
     // Create a blob URL for the content
     const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
-    
+
     // Try to open in new tab
     const newWindow = window.open(url, '_blank')
-    
+
     if (!newWindow) {
       // Fallback: Download the file
       this.downloadAsHTML(html)
       alert(
         '📱 Document ready!\n\n' +
-        'The document has been downloaded.\n' +
-        'Open it to view, share, or print.'
+          'The document has been downloaded.\n' +
+          'Open it to view, share, or print.'
       )
     } else {
       // Clean up blob URL after a delay
@@ -391,14 +397,14 @@ export class PrintService {
    */
   private static openDesktopPrintWindow(html: string): void {
     const printWindow = window.open('', '_blank', 'height=800,width=800,scrollbars=yes')
-    
+
     if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') {
       // Popup blocked - download instead
       this.downloadAsHTML(html)
       alert(
         '✅ Document downloaded!\n\n' +
-        'Popup blocker detected. The document has been downloaded.\n' +
-        'Open it and click the Print button.'
+          'Popup blocker detected. The document has been downloaded.\n' +
+          'Open it and click the Print button.'
       )
       return
     }
@@ -407,7 +413,7 @@ export class PrintService {
     printWindow.document.open()
     printWindow.document.write(html)
     printWindow.document.close()
-    
+
     // Wait for content to load before printing
     printWindow.onload = () => {
       printWindow.focus()
@@ -433,5 +439,3 @@ export class PrintService {
     setTimeout(() => URL.revokeObjectURL(url), 100)
   }
 }
-
-
