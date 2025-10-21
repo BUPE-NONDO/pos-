@@ -1,0 +1,5 @@
+- [x] Modify DatabaseService.saveTransaction to enqueue mutation on Supabase failure
+- [x] Modify DatabaseService.saveQuotation to enqueue mutation on Supabase failure
+- [x] Update sync.ts to process sales_transactions mutations
+- [x] Update sync.ts to process quotations mutations
+- [ ] Test offline capability: run dev, go offline, save transaction/quotation, verify queued, go online, verify sync

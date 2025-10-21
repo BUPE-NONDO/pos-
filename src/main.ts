@@ -38,7 +38,7 @@ class POSApp {
     installButton: document.getElementById('installButton') as HTMLButtonElement | null,
   }
 
-  private deferredPrompt: any = null
+  private deferredPrompt: unknown | null = null
 
   constructor() {
     this.initialize()
@@ -51,8 +51,109 @@ class POSApp {
     this.setupEventListeners()
     this.setupDarkMode()
     this.setupPWAInstall()
+    this.setupNetworkHandlers()
     this.checkBackendConnection()
     console.log('✅ Taolo POS v1.0 - Zambia Edition')
+  }
+
+  private setupNetworkHandlers(): void {
+    const indicator = document.getElementById('networkIndicator') as HTMLDivElement | null
+    const syncBadge = document.getElementById('syncBadge') as HTMLDivElement | null
+    const pendingCountEl = document.getElementById('pendingCount') as HTMLSpanElement | null
+
+    function updateIndicator() {
+      if (!indicator) return
+      if (navigator.onLine) {
+        indicator.classList.remove('bg-gray-400')
+        indicator.classList.remove('bg-red-400')
+        indicator.classList.add('bg-green-400')
+      } else {
+        indicator.classList.remove('bg-green-400')
+        indicator.classList.remove('bg-gray-400')
+        indicator.classList.add('bg-red-400')
+      }
+    }
+
+    updateIndicator()
+
+    window.addEventListener('online', async () => {
+      updateIndicator()
+      // attempt to use Background Sync if available
+      if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        try {
+          const reg = await navigator.serviceWorker.ready
+          // runtime-check: SyncManager may not be present in all browsers
+          const maybeReg: unknown = reg
+          // runtime-check for SyncManager - use a small allowed any here
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (typeof (maybeReg as any).sync === 'object' && typeof (maybeReg as any).sync.register === 'function') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (maybeReg as any).sync.register('sync-mutations')
+          }
+          console.log('✅ Registered background sync: sync-mutations')
+        } catch {
+          console.warn('⚠️ Background sync registration failed')
+          // fallback: post message to service worker to start immediate sync
+          navigator.serviceWorker.controller?.postMessage({ type: 'SYNC_MUTATIONS' })
+        }
+      } else if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'SYNC_MUTATIONS' })
+      }
+
+      // also attempt client-side drain as a fallback
+      try {
+        const syncModule = await import('@/lib/sync')
+        await syncModule.drain()
+      } catch {
+        // ignore for now
+      }
+    })
+
+    window.addEventListener('offline', () => {
+      updateIndicator()
+    })
+
+    // Listen for service worker messages about sync
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', async (event) => {
+        const data = event.data || {}
+        if (data.type === 'SYNC_STARTED') {
+          if (syncBadge) syncBadge.classList.remove('hidden')
+        }
+        if (data.type === 'SYNC_COMPLETE') {
+          if (syncBadge) syncBadge.classList.add('hidden')
+        }
+
+        if (data.type === 'SYNC_MUTATIONS') {
+          try {
+            const syncModule = await import('@/lib/sync')
+            await syncModule.drain()
+          } catch {
+            // ignore
+          }
+        }
+      })
+    }
+
+    // Poll pending mutation count every 5s
+    try {
+      // dynamic import to avoid circular issues
+      window.setInterval(async () => {
+        try {
+          const offlineModule = await import('@/lib/offline')
+          const count = await offlineModule.getPendingCount()
+          if (pendingCountEl) pendingCountEl.textContent = String(count)
+          if (syncBadge) {
+            if (count > 0) syncBadge.classList.remove('hidden')
+            else syncBadge.classList.add('hidden')
+          }
+        } catch {
+          // ignore
+        }
+      }, 5000)
+    } catch {
+      // ignore
+    }
   }
 
   private loadProducts(): void {
@@ -446,11 +547,19 @@ class POSApp {
           return
         }
 
-        this.deferredPrompt.prompt()
-        const { outcome } = await this.deferredPrompt.userChoice
-
-        if (outcome === 'accepted') {
-          this.showMessage('App installing...', 'success')
+        // runtime-check the shape of the deferredPrompt
+        const dp = this.deferredPrompt as unknown as { prompt?: () => void; userChoice?: Promise<{ outcome?: string }> }
+        if (dp && typeof dp.prompt === 'function') {
+          dp.prompt()
+          try {
+            const uc = await (dp.userChoice ?? Promise.resolve({}))
+            const outcome = (uc as { outcome?: string } | undefined)?.outcome
+            if (outcome === 'accepted') {
+              this.showMessage('App installing...', 'success')
+            }
+          } catch {
+            // ignore
+          }
         }
 
         this.deferredPrompt = null
@@ -496,7 +605,7 @@ class POSApp {
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = new POSApp()
-  ;(window as any).__posApp = app
+  window.__posApp = app as unknown
 })
 
 if ('serviceWorker' in navigator) {

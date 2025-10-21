@@ -18,6 +18,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
     "firebase": "^12.4.0",
+    "idb": "^7.1.1",
+    "uuid": "^9.0.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {
@@ -28,6 +30,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
+    "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
     "autoprefixer": "^10.4.20",
@@ -37,7 +40,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.49",
     "prettier": "^3.6.2",
-    "supabase": "^2.51.0",
     "tailwindcss": "^4.0.9",
     "ts-jest": "^29.2.5",
     "typescript": "^5.5.2",

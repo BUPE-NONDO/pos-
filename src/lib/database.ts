@@ -1,6 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase'
 import { Transaction, Quotation, TransactionSchema, QuotationSchema } from '@/types/schemas'
 import { validateProductLimit, validateTransactionLimit } from './packageLimits'
+import offline from './offline'
 
 /**
  * Service layer for database operations
@@ -152,7 +153,27 @@ export class DatabaseService {
       return data?.id || transaction.transId
     } catch (error) {
       console.error('Error saving transaction:', error)
-      throw error
+      // Enqueue for offline sync
+      await offline.enqueueMutation({
+        id: `transaction:${transaction.transId}:${Date.now()}`,
+        table: 'sales_transactions',
+        action: 'insert',
+        payload: {
+          trans_id: transaction.transId,
+          timestamp: transaction.timestamp,
+          total_amount: transaction.totalAmount,
+          subtotal: transaction.subtotal,
+          tax: transaction.tax,
+          tax_rate: transaction.taxRate,
+          items: transaction.items,
+          cashier_id: transaction.cashierId,
+          status: transaction.status,
+        },
+        timestamp: new Date().toISOString(),
+        synced: false,
+      })
+      console.log('Transaction enqueued for offline sync')
+      return transaction.transId
     }
   }
 
@@ -204,7 +225,30 @@ export class DatabaseService {
       return data?.id || quotation.quoteId
     } catch (error) {
       console.error('Error saving quotation:', error)
-      throw error
+      // Enqueue for offline sync
+      const validUntil = new Date()
+      validUntil.setDate(validUntil.getDate() + 30)
+      await offline.enqueueMutation({
+        id: `quotation:${quotation.quoteId}:${Date.now()}`,
+        table: 'quotations',
+        action: 'insert',
+        payload: {
+          quote_id: quotation.quoteId,
+          timestamp: quotation.timestamp,
+          total_amount: quotation.totalAmount,
+          subtotal: quotation.subtotal,
+          tax: quotation.tax,
+          tax_rate: quotation.taxRate,
+          items: quotation.items,
+          prepared_by: quotation.preparedBy,
+          status: quotation.status,
+          valid_until: validUntil.toISOString(),
+        },
+        timestamp: new Date().toISOString(),
+        synced: false,
+      })
+      console.log('Quotation enqueued for offline sync')
+      return quotation.quoteId
     }
   }
 

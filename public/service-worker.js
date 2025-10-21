@@ -88,8 +88,17 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (!event.data) return
+
+  if (event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
+    return
+  }
+
+  if (event.data.type === 'SYNC_MUTATIONS') {
+    // Trigger a best-effort sync from the service worker (queue processing added later)
+    event.waitUntil(syncMutations())
+    return
   }
 })
 
@@ -97,10 +106,36 @@ self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-transactions') {
     event.waitUntil(syncTransactions())
   }
+
+  if (event.tag === 'sync-mutations') {
+    event.waitUntil(syncMutations())
+  }
 })
 
 async function syncTransactions() {
   console.log('[SW] Syncing offline transactions')
+}
+
+
+async function syncMutations() {
+  console.log('[SW] syncMutations called - no-op placeholder')
+
+  // Notify clients that a sync is starting
+  const clientsList = await self.clients.matchAll()
+  clientsList.forEach((client) => {
+    client.postMessage({ type: 'SYNC_STARTED' })
+  })
+
+  // TODO: implement processing of an IndexedDB mutation queue here.
+  // For now we simply notify clients the sync completed so the UI can react.
+  await new Promise((r) => setTimeout(r, 250))
+
+  const clientsDone = await self.clients.matchAll()
+  clientsDone.forEach((client) => {
+    client.postMessage({ type: 'SYNC_COMPLETE' })
+  })
+
+  return Promise.resolve()
 }
 
 

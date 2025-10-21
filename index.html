@@ -31,6 +31,11 @@
       <!-- Header/Navigation Bar -->
       <header class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-8 py-4 bg-white dark:bg-gray-900 sticky top-0 z-20 shadow-sm">
         <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Network status & Sync badge -->
+          <div class="flex items-center gap-3 mr-2">
+            <div id="networkIndicator" title="Network status" class="w-3 h-3 rounded-full bg-green-400 ring-1 ring-white" ></div>
+            <div id="syncBadge" class="text-xs text-gray-600 dark:text-gray-300 hidden">Sync: <span id="pendingCount">0</span></div>
+          </div>
           <!-- Simplified Logo -->
           <div class="flex items-center gap-3">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center">
