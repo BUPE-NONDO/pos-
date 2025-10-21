@@ -265,4 +265,21 @@ pnpm test
 
 **Happy selling! 🏥💊**
 
+### Server-side trial enforcement (recommended)
+
+To prevent repeated local trials and reduce abuse you should persist trial state server-side and limit one trial per install id or per authenticated account.
+
+1. Create the `app_settings` table in your Supabase project. A migration has been added at `supabase/migrations/20251021000001_create_app_settings.sql`.
+2. The app now generates an `install_id` and saves settings to localStorage. When Supabase is configured the client will attempt a best-effort upsert into `app_settings` to persist the settings remotely.
+3. Server-side rules you can enforce:
+   - Allow only one trial per `install_id` (the upsert prevents duplicates, but enforce trial start logic in RLS or your server function).
+   - Require verification (email/phone) before granting a trial if higher confidence is needed.
+   - Set an expiry on trial fields server-side and periodically clean expired trials.
+
+Example policy (conceptual):
+- When handling a trial start request, check whether the `install_id` already has a trialStart; deny if already used.
+
+Notes:
+- For full enforcement you may want to add a simple server endpoint (or Supabase function) that validates and grants trials rather than relying on client-side only operations.
+
 

@@ -56,6 +56,8 @@
               Loading...
             </span>
           </p>
+          <!-- Trial badge -->
+          <div id="trialBadge" class="hidden text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300 px-2 py-1 rounded-lg">Free trial</div>
           
           <!-- Install App Button -->
           <button id="installButton" class="hidden px-3 py-2 bg-primary text-white text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors duration-200 shadow-sm flex items-center gap-2" aria-label="Install app">
@@ -127,7 +129,7 @@
               <span id="subtotalDisplay" class="font-medium text-gray-900 dark:text-white">ZMW 0.00</span>
             </div>
             <div class="flex justify-between text-base text-gray-600 dark:text-gray-400">
-              <span>Tax (16%)</span>
+              <span id="taxLabel">Tax (16%)</span>
               <span id="taxDisplay" class="font-medium text-gray-900 dark:text-white">ZMW 0.00</span>
             </div>
             <div class="flex justify-between text-xl font-semibold border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -203,6 +205,70 @@
             </div>
           </div>
         </div>
+
+            <!-- Onboarding Modal (Hidden by default) -->
+            <div id="onboardingModal" class="hidden fixed inset-0 bg-black/50 z-60 flex items-center justify-center p-4">
+              <div class="bg-white dark:bg-gray-800 max-w-2xl w-full rounded-2xl shadow-xl overflow-hidden">
+                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                  <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Welcome to Taolo POS</h2>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Let's set up a few preferences to get you started.</p>
+                </div>
+                    <form id="onboardingForm" class="p-6">
+                      <div id="onboardingStep1" class="space-y-4">
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Business name</label>
+                          <input id="obBusinessName" type="text" class="mt-2 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3" placeholder="Your shop name" />
+                        </div>
+
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Tax rate (%)</label>
+                          <input id="obTaxRate" type="number" step="0.01" min="0" class="mt-2 w-40 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3" value="16" />
+                        </div>
+
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Package tier</label>
+                          <select id="obPackageTier" class="mt-2 w-48 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3">
+                            <option value="basic">Basic</option>
+                            <option value="medium">Medium</option>
+                            <option value="premium">Premium</option>
+                          </select>
+                        </div>
+                        <div class="pt-2">
+                          <button type="button" id="startTrialBtn" class="px-3 py-2 text-sm bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 rounded-md">Start 1-week free trial</button>
+                        </div>
+                      </div>
+
+                      <div id="onboardingStep2" class="space-y-4 hidden">
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Shop logo (optional)</label>
+                          <input id="obLogo" type="file" accept="image/*" class="mt-2 block" />
+                          <div id="obLogoPreview" class="mt-3 w-32 h-32 rounded-md bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden"></div>
+                        </div>
+
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Receipt header (optional)</label>
+                          <input id="obReceiptHeader" type="text" class="mt-2 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3" placeholder="e.g. Taolo Pharmacy - Receipt" />
+                        </div>
+
+                        <div>
+                          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Currency</label>
+                          <input id="obCurrency" type="text" class="mt-2 w-40 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-3" value="ZMW" />
+                        </div>
+                      </div>
+
+                      <div class="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+                        <div>
+                          <button type="button" id="skipOnboarding" class="px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg">Skip</button>
+                        </div>
+                        <div class="flex gap-3">
+                          <button type="button" id="backOnboarding" class="px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg hidden">Back</button>
+                          <button type="button" id="nextOnboarding" class="px-4 py-2 bg-primary text-white font-medium rounded-lg">Next</button>
+                          <button type="submit" id="completeOnboarding" class="px-4 py-2 bg-primary text-white font-medium rounded-lg hidden">Save & Finish</button>
+                        </div>
+                      </div>
+                    </form>
+              </div>
+            </div>
       </div>
 
       <!-- Help Button (Fixed) -->

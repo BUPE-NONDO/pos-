@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { Product, CartItem } from '@/types/schemas'
 import { POSService } from '@/lib/pos'
 import { DatabaseService } from '@/lib/database'
@@ -15,7 +16,7 @@ class POSApp {
   private products: Product[] = []
   private filteredProducts: Product[] = []
   private cashierId: string = ''
-  private readonly TAX_RATE = 0.16
+  private taxRate: number = 0.16
 
   // DOM element references
   private dom = {
@@ -45,6 +46,29 @@ class POSApp {
   }
 
   private async initialize(): Promise<void> {
+    // Load app settings (onboarding, tax rate, business name etc.) first
+    let settings: any = { onboardingComplete: false }
+    try {
+      const settingsModule = await import('@/lib/settings')
+      settings = settingsModule.SettingsService.getSettings()
+      this.taxRate = settings.taxRate ?? this.taxRate
+
+      // URL override to force onboarding (useful for testing)
+      const urlParams = new URLSearchParams(window.location.search)
+      const forceOnboarding = urlParams.get('onboarding') === 'true'
+
+      // Show onboarding when not completed — block further initialization until done
+      if (forceOnboarding || !settings.onboardingComplete) {
+        await this.showOnboardingModal()
+        // reload settings after onboarding
+        settings = (await import('@/lib/settings')).SettingsService.getSettings()
+        this.taxRate = settings.taxRate ?? this.taxRate
+      }
+    } catch {
+      console.warn('Settings service unavailable')
+    }
+
+    // Now continue initialization
     this.cashierId = POSService.generateCashierId()
     this.dom.userIdDisplay.textContent = this.cashierId
     this.loadProducts()
@@ -52,6 +76,23 @@ class POSApp {
     this.setupDarkMode()
     this.setupPWAInstall()
     this.checkBackendConnection()
+    // Show trial badge if active
+    try {
+      const m = await import('@/lib/settings')
+      const Settings = m.SettingsService
+      const badge = document.getElementById('trialBadge')
+      if (Settings.isTrialActive()) {
+        const days = Settings.trialDaysLeft()
+        if (badge) {
+          badge.textContent = `Free trial — ${days} day${days !== 1 ? 's' : ''} left`
+          badge.classList.remove('hidden')
+        }
+      } else if (badge) {
+        badge.classList.add('hidden')
+      }
+    } catch {
+      // ignore
+    }
     console.log('✅ Taolo POS v1.0 - Zambia Edition')
   }
 
@@ -218,7 +259,7 @@ class POSApp {
 
     this.setButtonsEnabled(false)
 
-    const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
+      const totals = POSService.calculateTotals(this.cart, this.taxRate)
     const transId = POSService.generateTransactionId()
 
     this.showMessage(`Processing sale ${transId}...`, 'info')
@@ -230,7 +271,7 @@ class POSApp {
         totalAmount: totals.total,
         subtotal: totals.subtotal,
         tax: totals.tax,
-        taxRate: this.TAX_RATE,
+  taxRate: this.taxRate,
         items: [...this.cart],
         cashierId: this.cashierId,
         status: 'Completed' as const,
@@ -261,7 +302,7 @@ class POSApp {
 
     this.setButtonsEnabled(false)
 
-    const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
+      const totals = POSService.calculateTotals(this.cart, this.taxRate)
     const quoteId = POSService.generateQuotationId()
 
     this.showMessage(`Saving quotation ${quoteId}...`, 'info')
@@ -276,7 +317,7 @@ class POSApp {
         totalAmount: totals.total,
         subtotal: totals.subtotal,
         tax: totals.tax,
-        taxRate: this.TAX_RATE,
+  taxRate: this.taxRate,
         items: [...this.cart],
         preparedBy: this.cashierId,
         status: 'Quoted' as const,
@@ -339,7 +380,7 @@ class POSApp {
 
       card.innerHTML = `
         <div class="w-20 h-20 sm:w-full sm:h-28 flex-shrink-0 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
-          <img src="${product.image || 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'}" 
+    <img src="${product.image || '/icons/icon-512x512.svg'}" 
                alt="${product.name}" 
                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                onerror="this.src='https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=200&h=200&fit=crop'" />
@@ -402,7 +443,7 @@ class POSApp {
       })
     }
 
-    const totals = POSService.calculateTotals(this.cart, this.TAX_RATE)
+      const totals = POSService.calculateTotals(this.cart, this.taxRate)
     this.dom.subtotalDisplay.textContent = POSService.formatCurrency(totals.subtotal)
     this.dom.taxDisplay.textContent = POSService.formatCurrency(totals.tax)
     this.dom.totalDisplay.textContent = POSService.formatCurrency(totals.total)
@@ -475,6 +516,172 @@ class POSApp {
         this.dom.installButton.classList.add('hidden')
       }
     }
+  }
+
+  // Onboarding modal handlers
+  private async showOnboardingModal(): Promise<void> {
+    const modal = document.getElementById('onboardingModal')
+    if (!modal) return
+
+    // Elements
+    const step1 = document.getElementById('onboardingStep1')
+    const step2 = document.getElementById('onboardingStep2')
+    const nextBtn = document.getElementById('nextOnboarding') as HTMLButtonElement | null
+    const backBtn = document.getElementById('backOnboarding') as HTMLButtonElement | null
+    const completeBtn = document.getElementById('completeOnboarding') as HTMLButtonElement | null
+    const skipBtn = document.getElementById('skipOnboarding') as HTMLButtonElement | null
+    const logoInput = document.getElementById('obLogo') as HTMLInputElement | null
+    const logoPreview = document.getElementById('obLogoPreview') as HTMLDivElement | null
+
+    // Pre-fill values from settings if available
+    try {
+      const settingsModule = await import('@/lib/settings')
+      const s = settingsModule.SettingsService.getSettings()
+      const bn = document.getElementById('obBusinessName') as HTMLInputElement | null
+      const tr = document.getElementById('obTaxRate') as HTMLInputElement | null
+      const pt = document.getElementById('obPackageTier') as HTMLSelectElement | null
+      const rh = document.getElementById('obReceiptHeader') as HTMLInputElement | null
+      const cur = document.getElementById('obCurrency') as HTMLInputElement | null
+
+  if (bn && s.businessName) bn.value = s.businessName
+  // show tax as percentage in the input (e.g., 16 for 16%)
+  if (tr && typeof s.taxRate === 'number') tr.value = String((s.taxRate * 100).toFixed(2))
+      if (pt && s.packageTier) pt.value = s.packageTier
+      if (rh && s.receiptHeader) rh.value = s.receiptHeader
+      if (cur && s.currency) cur.value = s.currency
+      if (logoPreview && s.logoDataUrl) {
+        logoPreview.innerHTML = `<img src="${s.logoDataUrl}" alt="logo" class="w-full h-full object-cover"/>`
+      }
+      const startTrialBtn = document.getElementById('startTrialBtn') as HTMLButtonElement | null
+      if (startTrialBtn) {
+        if (s.trialActive && s.trialExpires) {
+          startTrialBtn.textContent = 'Trial active'
+          startTrialBtn.disabled = true
+        } else {
+          startTrialBtn.textContent = 'Start 1-week free trial'
+          startTrialBtn.disabled = false
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    const startTrialBtn = document.getElementById('startTrialBtn') as HTMLButtonElement | null
+    const trialBadge = document.getElementById('trialBadge')
+      startTrialBtn?.addEventListener('click', async () => {
+      try {
+        const m = await import('@/lib/settings')
+        const Settings = m.SettingsService
+        Settings.startTrial()
+        const days = Settings.trialDaysLeft()
+        if (trialBadge) {
+          trialBadge.textContent = `Free trial — ${days} day${days !== 1 ? 's' : ''} left`
+          trialBadge.classList.remove('hidden')
+        }
+        // give visual feedback
+        startTrialBtn.textContent = 'Trial started'
+        startTrialBtn.disabled = true
+      } catch {
+        // ignore
+      }
+    })
+
+    modal.classList.remove('hidden')
+
+    const showStep = (n: number) => {
+      if (step1 && step2) {
+        step1.classList.toggle('hidden', n !== 1)
+        step2.classList.toggle('hidden', n !== 2)
+      }
+      if (backBtn) backBtn.classList.toggle('hidden', n === 1)
+      if (nextBtn) nextBtn.classList.toggle('hidden', n === 2)
+      if (completeBtn) completeBtn.classList.toggle('hidden', n !== 2)
+    }
+
+    // Logo file reader
+    if (logoInput && logoPreview) {
+      logoInput.addEventListener('change', () => {
+        const file = (logoInput.files && logoInput.files[0]) || null
+        if (!file) return
+        if (typeof window !== 'undefined' && 'FileReader' in window) {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const dataUrl = String(reader.result || '')
+            logoPreview.innerHTML = `<img src="${dataUrl}" alt="logo" class="w-full h-full object-cover"/>`
+            // Temporarily store in preview element dataset for later save
+            interface LogoPreviewDataset { logo?: string }
+            ;(logoPreview as HTMLDivElement & { dataset: LogoPreviewDataset }).dataset.logo = dataUrl
+          }
+          reader.readAsDataURL(file)
+        }
+      })
+    }
+
+    // Navigation handlers
+    nextBtn?.addEventListener('click', () => showStep(2))
+    backBtn?.addEventListener('click', () => showStep(1))
+
+    return new Promise<void>(resolve => {
+      const finish = async () => {
+      const bn = (document.getElementById('obBusinessName') as HTMLInputElement | null)?.value.trim()
+      const tr = parseFloat((document.getElementById('obTaxRate') as HTMLInputElement | null)?.value || String(this.taxRate)) || this.taxRate
+  const pt = (document.getElementById('obPackageTier') as HTMLElement | null)?.querySelector('option:checked')?.getAttribute('value') || undefined
+      const rh = (document.getElementById('obReceiptHeader') as HTMLInputElement | null)?.value
+      const cur = (document.getElementById('obCurrency') as HTMLInputElement | null)?.value
+      const logoData = (document.getElementById('obLogoPreview') as HTMLDivElement | null)?.dataset.logo
+
+      try {
+        const m = await import('@/lib/settings')
+        m.SettingsService.saveSettings({
+          businessName: bn || undefined,
+          taxRate: tr,
+          packageTier: pt || undefined,
+          receiptHeader: rh || undefined,
+          currency: cur || undefined,
+          logoDataUrl: logoData || undefined,
+          onboardingComplete: true,
+        })
+      } catch {
+        console.warn('Failed to save onboarding settings')
+      }
+
+      if (bn) {
+        const titleEl = document.querySelector('header h2')
+        if (titleEl) titleEl.textContent = bn
+        document.title = `${bn} - POS`
+      }
+      // convert percent input (e.g., 16) to decimal (0.16)
+      this.taxRate = isFinite(tr) ? tr / 100 : this.taxRate
+      // update tax label in UI
+      const taxLabel = document.getElementById('taxLabel')
+      if (taxLabel) taxLabel.textContent = `Tax (${(this.taxRate * 100).toFixed(2)}%)`
+
+      modal.classList.add('hidden')
+  resolve()
+    }
+
+    // Form submit = finish
+    const form = document.getElementById('onboardingForm') as HTMLElement | null
+    const saveHandler = (e: Event) => {
+      e.preventDefault()
+      finish()
+    }
+
+      form?.addEventListener('submit', saveHandler)
+      skipBtn?.addEventListener('click', async () => {
+        try {
+          const m = await import('@/lib/settings')
+          m.SettingsService.saveSettings({ onboardingComplete: true })
+        } catch {
+          // ignore
+        }
+        modal.classList.add('hidden')
+        resolve()
+      })
+
+      // Initialize to step 1
+      showStep(1)
+    })
   }
 
   private showInstallInstructions(): void {
